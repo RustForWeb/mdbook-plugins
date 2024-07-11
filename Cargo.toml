@@ -1,0 +1,13 @@
+[workspace]
+members = ["packages/*"]
+resolver = "2"
+
+[workspace.package]
+authors = ["Rust For Web <info@rustforweb.org>"]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/RustForWeb/mdbook-plugins"
+version = "0.0.1"
+
+[workspace.dependencies]
+mdbook = "0.4.40"
