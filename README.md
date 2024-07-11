@@ -1,6 +1,6 @@
 # mdBook Plugins
 
-Plugins for mdBook.
+Plugins for [mdBook](https://rust-lang.github.io/mdBook/).
 
 - [`mdbook-trunk`](packages/mdbook-trunk)
 
