@@ -13,7 +13,7 @@ version.workspace = true
 anyhow = "1.0.86"
 clap = { version = "4.5.8", features = ["derive"] }
 env_logger = "0.11.3"
-log.workspace = true
+log = "0.4.22"
 mdbook.workspace = true
 pulldown-cmark = "0.11.0"
 pulldown-cmark-to-cmark = "15.0.1"

@@ -9,14 +9,17 @@ pub struct Block<'a> {
     closed: bool,
     events: Vec<Event<'a>>,
     span: Range<usize>,
+    inner_span: Range<usize>,
 }
 
 impl<'a> Block<'a> {
     pub fn new(first_event: Event<'a>, span: Range<usize>) -> Self {
+        let inner_span = 0..0;
         Block {
             closed: false,
             events: vec![first_event],
             span,
+            inner_span,
         }
     }
 }
@@ -55,6 +58,10 @@ where
         } else if let Some(block) = blocks.last_mut() {
             if !block.closed {
                 block.events.push(event);
+                block.inner_span = match block.inner_span == (0..0) {
+                    true => span,
+                    false => block.inner_span.start..span.end,
+                };
             }
         }
     }
@@ -77,13 +84,14 @@ mod test {
         key2 = \"value2\"\n\
         ```";
         let expected: Vec<Block> = vec![Block {
+            closed: true,
             events: vec![
                 Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
                 Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
                 Event::End(TagEnd::CodeBlock),
             ],
             span: 0..43,
-            closed: true,
+            inner_span: 8..40,
         }];
 
         let actual = parse_blocks(
@@ -109,13 +117,14 @@ mod test {
         \n\
         Some text after the code block.";
         let expected: Vec<Block> = vec![Block {
+            closed: true,
             events: vec![
                 Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
                 Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
                 Event::End(TagEnd::CodeBlock),
             ],
             span: 34..77,
-            closed: true,
+            inner_span: 42..74,
         }];
 
         let actual = parse_blocks(
@@ -148,22 +157,24 @@ mod test {
         ```";
         let expected: Vec<Block> = vec![
             Block {
+                closed: true,
                 events: vec![
                     Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
                     Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
                     Event::End(TagEnd::CodeBlock),
                 ],
                 span: 18..61,
-                closed: true,
+                inner_span: 26..58,
             },
             Block {
+                closed: true,
                 events: vec![
                     Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
                     Event::Text(CowStr::from("key3 = \"value3\"\nkey4 = \"value4\"\n")),
                     Event::End(TagEnd::CodeBlock),
                 ],
                 span: 126..169,
-                closed: true,
+                inner_span: 134..166,
             },
         ];
 
