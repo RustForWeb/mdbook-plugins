@@ -1,3 +1,9 @@
+use std::{path::PathBuf, process::Command};
+
+use fs_extra::{
+    copy_items,
+    dir::{copy, CopyOptions},
+};
 use log::debug;
 use mdbook::{
     book::{Book, Chapter},
@@ -5,42 +11,15 @@ use mdbook::{
     BookItem,
 };
 use pulldown_cmark::{CodeBlockKind, Event, Tag, TagEnd};
+use tempfile::tempdir;
 
-use crate::parser::parse_blocks;
+use crate::{config::Config, parser::parse_blocks};
 
 pub struct TrunkPreprocessor;
 
 impl TrunkPreprocessor {
     pub fn new() -> Self {
         Self
-    }
-
-    fn is_start_event(event: &Event) -> bool {
-        if let Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(tag))) = event {
-            let tags = tag
-                .split(',')
-                .map(|tag| tag.trim().to_lowercase())
-                .collect::<Vec<_>>();
-            tags.len() >= 2 && tags[0] == "toml" && tags[1] == "trunk"
-        } else {
-            false
-        }
-    }
-
-    fn is_end_event(event: &Event) -> bool {
-        matches!(event, Event::End(TagEnd::CodeBlock))
-    }
-
-    fn process_chapter(&self, chapter: &mut Chapter) -> Result<(), mdbook::errors::Error> {
-        let blocks = parse_blocks(
-            &chapter.content,
-            TrunkPreprocessor::is_start_event,
-            TrunkPreprocessor::is_end_event,
-        );
-
-        debug!("{:?}", blocks);
-
-        Ok(())
     }
 }
 
@@ -55,12 +34,24 @@ impl Preprocessor for TrunkPreprocessor {
         "trunk"
     }
 
-    fn run(&self, _ctx: &PreprocessorContext, book: Book) -> Result<Book, mdbook::errors::Error> {
+    fn run(&self, ctx: &PreprocessorContext, book: Book) -> Result<Book, mdbook::errors::Error> {
         let mut book = book.clone();
+
+        let src_dir = ctx.root.join(&ctx.config.book.src);
+        let dest_dir = ctx.root.join(&ctx.config.build.build_dir);
 
         for section in &mut book.sections {
             if let BookItem::Chapter(chapter) = section {
-                self.process_chapter(chapter)?;
+                let src_path = src_dir.join(
+                    chapter
+                        .source_path
+                        .as_ref()
+                        .expect("Chapter should have source path."),
+                );
+                let dest_path =
+                    dest_dir.join(chapter.path.as_ref().expect("Chapter should have path."));
+
+                process_chapter(chapter, src_path, dest_path)?;
             }
         }
 
@@ -72,58 +63,65 @@ impl Preprocessor for TrunkPreprocessor {
     }
 }
 
-#[cfg(test)]
-mod test {
-    use mdbook::preprocess::CmdPreprocessor;
-
-    use super::*;
-
-    #[test]
-    fn test_run() {
-        let input_json = r##"[
-            {
-                "root": "/path/to/book",
-                "config": {
-                    "book": {
-                        "authors": ["AUTHOR"],
-                        "language": "en",
-                        "multilingual": false,
-                        "src": "src",
-                        "title": "TITLE"
-                    },
-                    "preprocessor": {
-                        "nop": {}
-                    }
-                },
-                "renderer": "html",
-                "mdbook_version": "0.4.21"
-            },
-            {
-                "sections": [
-                    {
-                        "Chapter": {
-                            "name": "Chapter 1",
-                            "content": "# Chapter 1\n{{#trunk example.rs}}\n",
-                            "number": [1],
-                            "sub_items": [],
-                            "path": "chapter_1.md",
-                            "source_path": "chapter_1.md",
-                            "parent_names": []
-                        }
-                    }
-                ],
-                "__non_exhaustive": null
-            }
-        ]"##
-        .as_bytes();
-
-        let (ctx, book) = CmdPreprocessor::parse_input(input_json).unwrap();
-        let expected_book = book.clone();
-
-        let result = TrunkPreprocessor::new().run(&ctx, book);
-        assert!(result.is_ok());
-
-        let actual_book = result.unwrap();
-        assert_eq!(actual_book, expected_book);
+fn is_start_event(event: &Event) -> bool {
+    if let Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(tag))) = event {
+        let tags = tag
+            .split(',')
+            .map(|tag| tag.trim().to_lowercase())
+            .collect::<Vec<_>>();
+        tags.len() >= 2 && tags[0] == "toml" && tags[1] == "trunk"
+    } else {
+        false
     }
+}
+
+fn is_end_event(event: &Event) -> bool {
+    matches!(event, Event::End(TagEnd::CodeBlock))
+}
+
+fn process_chapter(
+    chapter: &mut Chapter,
+    src_path: PathBuf,
+    dest_path: PathBuf,
+) -> Result<(), mdbook::errors::Error> {
+    let src_dir = src_path
+        .parent()
+        .expect("Source path should have a parent.");
+    let _dest_dir = dest_path
+        .parent()
+        .expect("Destination path should have a parent.");
+
+    let blocks = parse_blocks(&chapter.content, is_start_event, is_end_event)?;
+    debug!("{:?}", blocks);
+
+    for block in blocks {
+        let config = Config::parse(&chapter.content[block.inner_span])?;
+
+        let temp = tempdir()?;
+        copy(
+            std::fs::canonicalize(src_dir.join(config.template))?,
+            temp.path(),
+            &CopyOptions::new().content_only(true),
+        )?;
+        copy_items(
+            &config
+                .files
+                .iter()
+                .map(|file| src_dir.join(file))
+                .collect::<Vec<_>>(),
+            temp.path().join("src"),
+            &CopyOptions::new(),
+        )?;
+
+        debug!(
+            "{}",
+            std::str::from_utf8(&Command::new("tree").arg(temp.path()).output()?.stdout)?
+        );
+
+        // Command::new("trunk").arg("--dist").arg();
+
+        // chapter.content[block.span] = ;
+    }
+
+    Ok(())
 }

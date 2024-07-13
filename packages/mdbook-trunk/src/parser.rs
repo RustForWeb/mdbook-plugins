@@ -6,10 +6,10 @@ use pulldown_cmark::{Event, Parser};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block<'a> {
-    closed: bool,
-    events: Vec<Event<'a>>,
-    span: Range<usize>,
-    inner_span: Range<usize>,
+    pub closed: bool,
+    pub events: Vec<Event<'a>>,
+    pub span: Range<usize>,
+    pub inner_span: Range<usize>,
 }
 
 impl<'a> Block<'a> {

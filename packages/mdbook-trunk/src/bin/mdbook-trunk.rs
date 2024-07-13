@@ -24,6 +24,8 @@ struct SupportsArgs {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    env_logger::init();
+
     let cli = Cli::parse();
     let preprocessor = TrunkPreprocessor::new();
 
