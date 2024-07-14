@@ -1,4 +1,4 @@
 # Summary
 
-- [Introduction](./introduction.md)
-- [Trunk](./trunk/README.md)
+-   [Introduction](./introduction.md)
+-   [Trunk](./trunk.md)

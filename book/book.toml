@@ -7,3 +7,6 @@ title = "mdBook Plugins"
 
 [preprocessor.trunk]
 command = "cargo run -p mdbook-trunk"
+
+[output.trunk]
+command = "cargo run -p mdbook-trunk"

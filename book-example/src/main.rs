@@ -1,5 +1,8 @@
 mod app;
 
+#[cfg(feature = "button")]
+mod button;
+
 use crate::app::App;
 
 pub fn main() {

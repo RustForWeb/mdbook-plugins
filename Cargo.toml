@@ -1,5 +1,5 @@
 [workspace]
-members = ["book/templates/example", "packages/*"]
+members = ["book-example", "packages/*"]
 resolver = "2"
 
 [workspace.package]

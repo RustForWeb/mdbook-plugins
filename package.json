@@ -1,0 +1,15 @@
+{
+    "name": "@rustforweb/mdbook-plugins",
+    "description": "Plugins for mdBook.",
+    "author": "Rust For Web <info@rustforweb.org>",
+    "repository": "github:RustForWeb/mdbook-plugins",
+    "license": "MIT",
+    "private": true,
+    "scripts": {},
+    "devDependencies": {
+        "prettier": "^3.2.5"
+    },
+    "engines": {
+        "node": ">=18"
+    }
+}
