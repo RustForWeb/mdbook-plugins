@@ -35,7 +35,6 @@ impl Preprocessor for TrunkPreprocessor {
             if let BookItem::Chapter(chapter) = section {
                 let blocks = parse_chapter(chapter)?;
                 for (span, config) in blocks {
-                    log::debug!("Replaced {:?} with {}", span, iframe(&config)?);
                     chapter.content.replace_range(span, &iframe(&config)?);
                 }
             }
@@ -44,7 +43,8 @@ impl Preprocessor for TrunkPreprocessor {
         Ok(book)
     }
 
-    fn supports_renderer(&self, _renderer: &str) -> bool {
-        true
+    fn supports_renderer(&self, renderer: &str) -> bool {
+        renderer == "trunk"
+        // true
     }
 }

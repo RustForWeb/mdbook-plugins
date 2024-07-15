@@ -6,7 +6,7 @@ use std::{
 use clap::{Args, Parser, Subcommand};
 use mdbook::{
     preprocess::{CmdPreprocessor, Preprocessor},
-    renderer::{HtmlHandlebars, RenderContext},
+    renderer::RenderContext,
     Renderer,
 };
 use mdbook_trunk::{TrunkPreprocessor, TrunkRenderer};
@@ -37,7 +37,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
     let preprocessor = TrunkPreprocessor::new();
     let renderer = TrunkRenderer::new();
-    let html_renderer = HtmlHandlebars::new();
 
     match &cli.command {
         Some(subcommand) => match subcommand {
@@ -52,7 +51,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             if buffer[0] == b'[' {
                 handle_preprocessing(&preprocessor, reader)
             } else {
-                handle_renderer(&renderer, &html_renderer, reader)
+                handle_renderer(&renderer, reader)
             }
         }
     }
@@ -92,15 +91,22 @@ fn handle_preprocessing<R: Read>(
     Ok(())
 }
 
-fn handle_renderer<R: Read>(
-    renderer: &dyn Renderer,
-    html_renderer: &dyn Renderer,
-    reader: R,
-) -> Result<(), Box<dyn Error>> {
+fn handle_renderer<R: Read>(renderer: &dyn Renderer, reader: R) -> Result<(), Box<dyn Error>> {
     let ctx = RenderContext::from_json(reader).unwrap();
 
+    let book_version = Version::parse(&ctx.version)?;
+    let version_req = VersionReq::parse(mdbook::MDBOOK_VERSION)?;
+
+    if !version_req.matches(&book_version) {
+        eprintln!(
+            "Warning: The {} plugin was built against version {} of mdbook, but we're being called from version {}",
+            renderer.name(),
+            mdbook::MDBOOK_VERSION,
+            ctx.version
+        );
+    }
+
     renderer.render(&ctx)?;
-    html_renderer.render(&ctx)?;
 
     Ok(())
 }
