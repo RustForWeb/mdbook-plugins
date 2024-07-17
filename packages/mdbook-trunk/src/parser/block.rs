@@ -1,6 +1,7 @@
 use std::ops::Range;
 
 use anyhow::{bail, Result};
+use log::debug;
 use pulldown_cmark::{Event, Parser};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -35,6 +36,8 @@ where
     let mut blocks: Vec<Block> = vec![];
 
     for (event, span) in Parser::new(content).into_offset_iter() {
+        debug!("{:?} {:?}", event, span);
+
         if is_start(&event) {
             if let Some(block) = blocks.last_mut() {
                 if !block.closed {

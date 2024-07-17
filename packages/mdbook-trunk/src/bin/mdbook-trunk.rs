@@ -6,6 +6,7 @@ use std::{
 use anyhow::{anyhow, Result};
 use clap::{Args, Parser, Subcommand};
 use fs_extra::dir::{copy, get_dir_content2, CopyOptions, DirOptions};
+use log::warn;
 use mdbook::{
     preprocess::{CmdPreprocessor, Preprocessor},
     renderer::RenderContext,
@@ -66,9 +67,13 @@ fn main() -> Result<()> {
 fn handle_combine() -> Result<()> {
     let book = MDBook::load(env::current_dir()?)?;
     let build_dir = book.root.join(&book.config.build.build_dir);
+    let build_dir_str = build_dir.to_str().unwrap();
     let dest_dir = book.root.join("dist");
 
+    log::info!("Combining into directory `{}`.", build_dir_str);
+
     if dest_dir.exists() {
+        log::info!("Directory exists, recreating.");
         fs::remove_dir_all(&dest_dir)?;
     }
     fs::create_dir(&dest_dir)?;
@@ -76,13 +81,12 @@ fn handle_combine() -> Result<()> {
     let mut dir_options = DirOptions::new();
     dir_options.depth = 1;
 
-    log::info!("build dir: {:?}", build_dir);
     for directory in get_dir_content2(&build_dir, &dir_options)?.directories {
-        if directory == build_dir.to_str().unwrap() {
+        if directory == build_dir_str {
             continue;
         }
 
-        log::info!("{}", directory);
+        log::info!("Adding directory `{}`.", directory);
         copy(
             &build_dir.join(directory),
             &dest_dir,
@@ -110,8 +114,8 @@ fn handle_preprocessing<R: Read>(preprocessor: &dyn Preprocessor, reader: R) -> 
     let version_req = VersionReq::parse(mdbook::MDBOOK_VERSION)?;
 
     if !version_req.matches(&book_version) {
-        eprintln!(
-            "Warning: The {} plugin was built against version {} of mdbook, but we're being called from version {}",
+        warn!(
+            "The {} plugin was built against version {} of mdbook, but we're being called from version {}",
             preprocessor.name(),
             mdbook::MDBOOK_VERSION,
             ctx.mdbook_version
@@ -131,8 +135,8 @@ fn handle_renderer<R: Read>(renderer: &dyn Renderer, reader: R) -> Result<()> {
     let version_req = VersionReq::parse(mdbook::MDBOOK_VERSION)?;
 
     if !version_req.matches(&book_version) {
-        eprintln!(
-            "Warning: The {} plugin was built against version {} of mdbook, but we're being called from version {}",
+        warn!(
+            "The {} plugin was built against version {} of mdbook, but we're being called from version {}",
             renderer.name(),
             mdbook::MDBOOK_VERSION,
             ctx.version

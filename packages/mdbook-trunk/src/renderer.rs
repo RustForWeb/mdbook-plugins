@@ -2,6 +2,7 @@ use std::env;
 
 use anyhow::Result;
 use cargo::{core::Workspace, util::important_paths::find_root_manifest_for_wd, GlobalContext};
+use log::debug;
 use mdbook::{renderer::RenderContext, BookItem, Renderer};
 
 use crate::{parser::iframe::parse_iframes, trunk::build};
@@ -26,6 +27,8 @@ impl Renderer for TrunkRenderer {
     }
 
     fn render(&self, ctx: &RenderContext) -> Result<()> {
+        debug!("Trunk renderer {:?}", ctx.book);
+
         let gctx = GlobalContext::default()?;
         let workspace = Workspace::new(&find_root_manifest_for_wd(&env::current_dir()?)?, &gctx)?;
 

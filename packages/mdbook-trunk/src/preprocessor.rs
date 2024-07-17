@@ -1,6 +1,7 @@
 use std::str;
 
 use anyhow::Result;
+use log::debug;
 use mdbook::{
     book::Book,
     preprocess::{Preprocessor, PreprocessorContext},
@@ -29,6 +30,8 @@ impl Preprocessor for TrunkPreprocessor {
     }
 
     fn run(&self, _ctx: &PreprocessorContext, book: Book) -> Result<Book> {
+        debug!("Trunk preprocessor {:?}", book);
+
         let mut book = book.clone();
 
         for section in &mut book.sections {
