@@ -68,6 +68,7 @@ jobs:
                   mkdir mdbook
                   curl -sSL $url | tar -xz --directory=./mdbook
                   echo `pwd`/mdbook >> $GITHUB_PATH
+
             - name: Build Book
               run: mdbook build
               working-directory: book

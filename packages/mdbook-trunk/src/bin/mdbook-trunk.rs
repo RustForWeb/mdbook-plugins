@@ -36,9 +36,11 @@ struct SupportsArgs {
 }
 
 fn main() -> Result<()> {
-    env_logger::builder()
-        .filter_module("mdbook_trunk", log::LevelFilter::Info)
-        .init();
+    let mut logger = env_logger::builder();
+    if env::var("RUST_LOG").is_err() {
+        logger.filter_module("mdbook_trunk", log::LevelFilter::Info);
+    }
+    logger.init();
 
     let cli = Cli::parse();
     let preprocessor = TrunkPreprocessor::new();
