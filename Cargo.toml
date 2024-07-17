@@ -10,4 +10,13 @@ repository = "https://github.com/RustForWeb/mdbook-plugins"
 version = "0.0.4"
 
 [workspace.dependencies]
+anyhow = "1.0.86"
+clap = { version = "4.5.8", features = ["derive"] }
+env_logger = "0.11.3"
+log = "0.4.22"
 mdbook = "0.4.40"
+pulldown-cmark = "0.11.0"
+semver = "1.0.23"
+serde = { version = "1.0.204", features = ["derive"] }
+serde_json = "1.0.120"
+test-log = "0.2.16"

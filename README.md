@@ -2,6 +2,7 @@
 
 Plugins for [mdBook](https://rust-lang.github.io/mdBook/).
 
+-   [`mdbook-tabs`](packages/mdbook-tabs)
 -   [`mdbook-trunk`](packages/mdbook-trunk)
 
 ## License

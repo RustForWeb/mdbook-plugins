@@ -52,8 +52,6 @@ where
                     block.events.push(event);
                     block.closed = true;
                 }
-            } else {
-                bail!("No open block.");
             }
         } else if let Some(block) = blocks.last_mut() {
             if !block.closed {

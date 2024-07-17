@@ -2949,6 +2949,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "mdbook-plugin-utils"
+version = "0.0.4"
+dependencies = [
+ "anyhow",
+ "log",
+ "mdbook",
+ "pulldown-cmark 0.11.0",
+ "test-log",
+]
+
+[[package]]
+name = "mdbook-tabs"
+version = "0.0.4"
+dependencies = [
+ "anyhow",
+ "clap",
+ "env_logger",
+ "log",
+ "mdbook",
+ "mdbook-plugin-utils",
+ "pulldown-cmark 0.11.0",
+ "semver",
+ "serde",
+ "serde_json",
+ "test-log",
+ "toml 0.8.15",
+]
+
+[[package]]
 name = "mdbook-trunk"
 version = "0.0.4"
 dependencies = [
@@ -2961,12 +2990,12 @@ dependencies = [
  "htmlentity",
  "log",
  "mdbook",
+ "mdbook-plugin-utils",
  "peekread",
  "pulldown-cmark 0.11.0",
  "semver",
  "serde",
  "serde_json",
- "tempfile",
  "test-log",
  "toml 0.8.15",
 ]

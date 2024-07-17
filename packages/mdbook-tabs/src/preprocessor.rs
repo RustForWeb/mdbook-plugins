@@ -7,25 +7,25 @@ use mdbook::{
     BookItem,
 };
 
-use crate::{parser::definition::parse_definitions, trunk::iframe};
+// use crate::{parser::definition::parse_definitions, trunk::iframe};
 
-pub struct TrunkPreprocessor;
+pub struct TabsPreprocessor;
 
-impl TrunkPreprocessor {
+impl TabsPreprocessor {
     pub fn new() -> Self {
         Self
     }
 }
 
-impl Default for TrunkPreprocessor {
+impl Default for TabsPreprocessor {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl Preprocessor for TrunkPreprocessor {
+impl Preprocessor for TabsPreprocessor {
     fn name(&self) -> &str {
-        "trunk"
+        "tabs"
     }
 
     fn run(&self, _ctx: &PreprocessorContext, book: Book) -> Result<Book> {
@@ -44,10 +44,10 @@ impl Preprocessor for TrunkPreprocessor {
 fn process_items(items: &mut Vec<BookItem>) -> Result<()> {
     for section in items {
         if let BookItem::Chapter(chapter) = section {
-            let blocks = parse_definitions(chapter)?;
-            for (span, config) in blocks {
-                chapter.content.replace_range(span, &iframe(&config)?);
-            }
+            // let blocks = parse_definitions(chapter)?;
+            // for (span, config) in blocks {
+            //     chapter.content.replace_range(span, &iframe(&config)?);
+            // }
 
             process_items(&mut chapter.sub_items)?;
         }

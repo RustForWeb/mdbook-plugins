@@ -1,0 +1,16 @@
+[package]
+name = "mdbook-plugin-utils"
+description = "Utilities for mdBook plugins."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+log.workspace = true
+mdbook.workspace = true
+pulldown-cmark.workspace = true
+test-log.workspace = true

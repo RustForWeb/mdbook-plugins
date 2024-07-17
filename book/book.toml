@@ -5,6 +5,9 @@ multilingual = false
 src = "src"
 title = "mdBook Plugins"
 
+[preprocessor.tabs]
+command = "cargo run -p mdbook-tabs"
+
 [preprocessor.trunk]
 command = "cargo run -p mdbook-trunk"
 

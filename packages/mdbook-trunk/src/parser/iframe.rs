@@ -5,9 +5,10 @@ use html_parser::{Dom, Node};
 use htmlentity::entity::{decode, ICodedDataTrait};
 use log::debug;
 use mdbook::book::Chapter;
+use mdbook_plugin_utils::markdown::parse_blocks;
 use pulldown_cmark::{Event, TagEnd};
 
-use crate::{config::Config, parser::block::parse_blocks};
+use crate::config::Config;
 
 fn is_iframe_start(event: &Event) -> bool {
     match event {
