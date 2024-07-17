@@ -74,6 +74,7 @@ jobs:
 
             - name: Combine Book Outputs
               run: cargo run -p mdbook-trunk -- combine
+              working-directory: book
 
             - name: Setup Pages
               uses: actions/configure-pages@v4
