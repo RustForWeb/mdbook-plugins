@@ -34,5 +34,7 @@ pub fn parse_code_blocks(chapter: &Chapter) -> Result<Vec<(Range<usize>, Config)
         configs.push((block.span, config));
     }
 
+    debug!("{:?}", configs);
+
     Ok(configs)
 }

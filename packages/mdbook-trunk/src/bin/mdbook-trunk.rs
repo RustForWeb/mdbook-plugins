@@ -32,7 +32,9 @@ struct SupportsArgs {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    env_logger::init();
+    env_logger::builder()
+        .filter_module("mdbook_trunk", log::LevelFilter::Info)
+        .init();
 
     let cli = Cli::parse();
     let preprocessor = TrunkPreprocessor::new();
