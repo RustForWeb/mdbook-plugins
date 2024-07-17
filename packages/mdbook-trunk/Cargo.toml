@@ -1,7 +1,6 @@
 [package]
 name = "mdbook-trunk"
 description = "mdBook plugin which bundles packages using Trunk and includes them as iframes."
-publish = false
 
 authors.workspace = true
 edition.workspace = true
