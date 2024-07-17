@@ -1,8 +1,6 @@
-use std::{
-    error::Error,
-    io::{self, Read},
-};
+use std::io::{self, Read};
 
+use anyhow::{anyhow, Result};
 use clap::{Args, Parser, Subcommand};
 use mdbook::{
     preprocess::{CmdPreprocessor, Preprocessor},
@@ -23,6 +21,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    Combine,
     Supports(SupportsArgs),
 }
 
@@ -31,7 +30,7 @@ struct SupportsArgs {
     renderer: String,
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<()> {
     env_logger::builder()
         .filter_module("mdbook_trunk", log::LevelFilter::Info)
         .init();
@@ -42,6 +41,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     match &cli.command {
         Some(subcommand) => match subcommand {
+            Commands::Combine => handle_combine(),
             Commands::Supports(args) => handle_supports(&preprocessor, args),
         },
         None => {
@@ -59,20 +59,21 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 }
 
+fn handle_combine() -> Result<()> {
+    todo!("combine")
+}
+
 fn handle_supports(
     preprocessor: &dyn Preprocessor,
     SupportsArgs { renderer }: &SupportsArgs,
-) -> Result<(), Box<dyn Error>> {
+) -> Result<()> {
     match preprocessor.supports_renderer(renderer) {
         true => Ok(()),
-        false => Err(format!("Renderer `{renderer}` is not supported.").into()),
+        false => Err(anyhow!("Renderer `{renderer}` is not supported.")),
     }
 }
 
-fn handle_preprocessing<R: Read>(
-    preprocessor: &dyn Preprocessor,
-    reader: R,
-) -> Result<(), Box<dyn Error>> {
+fn handle_preprocessing<R: Read>(preprocessor: &dyn Preprocessor, reader: R) -> Result<()> {
     let (ctx, book) = CmdPreprocessor::parse_input(reader)?;
 
     let book_version = Version::parse(&ctx.mdbook_version)?;
@@ -93,7 +94,7 @@ fn handle_preprocessing<R: Read>(
     Ok(())
 }
 
-fn handle_renderer<R: Read>(renderer: &dyn Renderer, reader: R) -> Result<(), Box<dyn Error>> {
+fn handle_renderer<R: Read>(renderer: &dyn Renderer, reader: R) -> Result<()> {
     let ctx = RenderContext::from_json(reader).unwrap();
 
     let book_version = Version::parse(&ctx.version)?;

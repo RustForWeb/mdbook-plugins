@@ -27,6 +27,7 @@ jobs:
               working-directory: book
 
     deploy:
+        needs: test
         name: Deploy
         runs-on: ubuntu-latest
         permissions:
@@ -44,6 +45,8 @@ jobs:
                   mkdir mdbook
                   curl -sSL $url | tar -xz --directory=./mdbook
                   echo `pwd`/mdbook >> $GITHUB_PATH
+            - name: Install Trunk
+              run: cargo install trunk
             - name: Build Book
               run: mdbook build
               working-directory: book
