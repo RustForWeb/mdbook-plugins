@@ -11,7 +11,11 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn parse(content: &str) -> Result<Self, toml::de::Error> {
+    pub fn parse_from_json(content: &str) -> Result<Self, serde_json::error::Error> {
+        serde_json::from_str(content)
+    }
+
+    pub fn parse_from_toml(content: &str) -> Result<Self, toml::de::Error> {
         toml::from_str(content)
     }
 

@@ -7,7 +7,7 @@ use mdbook::{
     BookItem,
 };
 
-use crate::trunk::{iframe, parse_chapter};
+use crate::{parser::code_block::parse_code_blocks, trunk::iframe};
 
 pub struct TrunkPreprocessor;
 
@@ -33,7 +33,7 @@ impl Preprocessor for TrunkPreprocessor {
 
         for section in &mut book.sections {
             if let BookItem::Chapter(chapter) = section {
-                let blocks = parse_chapter(chapter)?;
+                let blocks = parse_code_blocks(chapter)?;
                 for (span, config) in blocks {
                     chapter.content.replace_range(span, &iframe(&config)?);
                 }
@@ -43,8 +43,7 @@ impl Preprocessor for TrunkPreprocessor {
         Ok(book)
     }
 
-    fn supports_renderer(&self, renderer: &str) -> bool {
-        renderer == "trunk"
-        // true
+    fn supports_renderer(&self, _renderer: &str) -> bool {
+        true
     }
 }

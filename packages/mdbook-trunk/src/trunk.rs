@@ -1,54 +1,22 @@
-use std::{ops::Range, path::Path, process::Command, str};
+use std::{path::Path, process::Command, str};
 
 use anyhow::{bail, Result};
 use cargo::core::Workspace;
 use htmlentity::entity::{encode, EncodeType, ICodedDataTrait};
-use log::{debug, error};
-use mdbook::book::Chapter;
-use pulldown_cmark::{CodeBlockKind, Event, Tag, TagEnd};
+use log::error;
 
-use crate::{config::Config, parser::parse_blocks};
-
-fn is_start_event(event: &Event) -> bool {
-    if let Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(tag))) = event {
-        let tags = tag
-            .split(',')
-            .map(|tag| tag.trim().to_lowercase())
-            .collect::<Vec<_>>();
-        tags.len() >= 2 && tags[0] == "toml" && tags[1] == "trunk"
-    } else {
-        false
-    }
-}
-
-fn is_end_event(event: &Event) -> bool {
-    matches!(event, Event::End(TagEnd::CodeBlock))
-}
-
-pub fn parse_chapter(chapter: &Chapter) -> Result<Vec<(Range<usize>, Config)>> {
-    let mut configs: Vec<(Range<usize>, Config)> = vec![];
-
-    let blocks = parse_blocks(&chapter.content, is_start_event, is_end_event)?;
-    debug!("{:?}", blocks);
-
-    for block in blocks {
-        let config = Config::parse(&chapter.content[block.inner_span.clone()])?;
-        configs.push((block.span, config));
-    }
-
-    Ok(configs)
-}
+use crate::config::Config;
 
 pub fn iframe(config: &Config) -> Result<String> {
     Ok(format!(
-        "<iframe src=\"/{}/index.html\" data-mdbook-trunk=\"{}\" style=\"border: none;\"></iframe>",
-        config.dest_name(),
+        "<iframe data-mdbook-trunk=\"{}\" class=\"mdbook-trunk-iframe\" src=\"/{}/index.html\" style=\"border: none;\"></iframe>",
         encode(
             serde_json::to_string(config)?.as_bytes(),
             &EncodeType::Named,
             &htmlentity::entity::CharacterSet::SpecialChars
         )
-        .to_string()?
+        .to_string()?,
+        config.dest_name(),
     ))
 }
 
@@ -59,6 +27,8 @@ pub fn build(workspace: &Workspace, config: Config, dest_dir: &Path) -> Result<(
         .arg("build")
         .arg("--dist")
         .arg(dest_dir)
+        .arg("--public-url")
+        .arg(format!("/{}/", config.dest_name()))
         .current_dir(package_root)
         .output()?;
 
