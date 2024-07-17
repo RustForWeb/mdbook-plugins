@@ -68,11 +68,13 @@ fn main() -> Result<()> {
 
 fn handle_combine() -> Result<()> {
     let book = MDBook::load(env::current_dir()?)?;
+
     let build_dir = book.root.join(&book.config.build.build_dir);
     let build_dir_str = build_dir.to_str().unwrap();
     let dest_dir = book.root.join("dist");
+    let dest_dir_str = dest_dir.to_str().unwrap();
 
-    log::info!("Combining into directory `{}`.", build_dir_str);
+    log::info!("Combining into directory `{}`.", dest_dir_str);
 
     if dest_dir.exists() {
         log::info!("Directory exists, recreating.");
