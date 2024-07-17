@@ -9,6 +9,9 @@ package = "book-example"
 features = ["button"]
 ```
 
+-   [Book source code](https://github.com/RustForWeb/mdbook-plugins/tree/main/book)
+-   [Example source code](https://github.com/RustForWeb/mdbook-plugins/tree/main/book-example)
+
 ## Installation
 
 ```shell
