@@ -40,6 +40,9 @@ pub fn build(workspace: &Workspace, config: Config, dest_dir: &Path) -> Result<(
         .arg(dest_dir)
         .arg("--public-url")
         .arg(format!("/{}/", config.dest_name()))
+        .arg("--no-default-features")
+        .arg("--features")
+        .arg(config.features.join(","))
         .current_dir(package_root)
         .output()?;
 
