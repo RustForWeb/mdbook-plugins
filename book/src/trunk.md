@@ -31,7 +31,7 @@ Add the preprocessor and renderer to `book.toml`. Note that the HTML renderer is
 
 Define a Trunk include as follows:
 
-````
+````markdown
 ```toml,trunk
 # Package to build, must be in the current workspace.
 package = "book-example"
