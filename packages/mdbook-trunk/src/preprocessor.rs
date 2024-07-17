@@ -1,7 +1,6 @@
 use std::str;
 
 use anyhow::Result;
-use log::debug;
 use mdbook::{
     book::Book,
     preprocess::{Preprocessor, PreprocessorContext},
@@ -30,18 +29,9 @@ impl Preprocessor for TrunkPreprocessor {
     }
 
     fn run(&self, _ctx: &PreprocessorContext, book: Book) -> Result<Book> {
-        debug!("Trunk preprocessor {:?}", book);
-
         let mut book = book.clone();
 
-        for section in &mut book.sections {
-            if let BookItem::Chapter(chapter) = section {
-                let blocks = parse_code_blocks(chapter)?;
-                for (span, config) in blocks {
-                    chapter.content.replace_range(span, &iframe(&config)?);
-                }
-            }
-        }
+        process_items(&mut book.sections)?;
 
         Ok(book)
     }
@@ -49,4 +39,19 @@ impl Preprocessor for TrunkPreprocessor {
     fn supports_renderer(&self, _renderer: &str) -> bool {
         true
     }
+}
+
+fn process_items(items: &mut Vec<BookItem>) -> Result<()> {
+    for section in items {
+        if let BookItem::Chapter(chapter) = section {
+            let blocks = parse_code_blocks(chapter)?;
+            for (span, config) in blocks {
+                chapter.content.replace_range(span, &iframe(&config)?);
+            }
+
+            process_items(&mut chapter.sub_items)?;
+        }
+    }
+
+    Ok(())
 }
