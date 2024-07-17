@@ -72,8 +72,8 @@ jobs:
               run: mdbook build
               working-directory: book
 
-            - name: Combine Book Build Directories
-              run: mkdir book/dist && cp -r book/book/*/ book/dist
+            - name: Combine Book Outputs
+              run: cargo run -p mdbook-trunk -- combine
 
             - name: Setup Pages
               uses: actions/configure-pages@v4

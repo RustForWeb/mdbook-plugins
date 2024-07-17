@@ -1,11 +1,15 @@
-use std::io::{self, Read};
+use std::{
+    env, fs,
+    io::{self, Read},
+};
 
 use anyhow::{anyhow, Result};
 use clap::{Args, Parser, Subcommand};
+use fs_extra::dir::{copy, get_dir_content2, CopyOptions, DirOptions};
 use mdbook::{
     preprocess::{CmdPreprocessor, Preprocessor},
     renderer::RenderContext,
-    Renderer,
+    MDBook, Renderer,
 };
 use mdbook_trunk::{TrunkPreprocessor, TrunkRenderer};
 use peekread::{BufPeekReader, PeekRead};
@@ -60,7 +64,33 @@ fn main() -> Result<()> {
 }
 
 fn handle_combine() -> Result<()> {
-    todo!("combine")
+    let book = MDBook::load(env::current_dir()?)?;
+    let build_dir = book.root.join(&book.config.build.build_dir);
+    let dest_dir = book.root.join("dist");
+
+    if dest_dir.exists() {
+        fs::remove_dir_all(&dest_dir)?;
+    }
+    fs::create_dir(&dest_dir)?;
+
+    let mut dir_options = DirOptions::new();
+    dir_options.depth = 1;
+
+    log::info!("build dir: {:?}", build_dir);
+    for directory in get_dir_content2(&build_dir, &dir_options)?.directories {
+        if directory == build_dir.to_str().unwrap() {
+            continue;
+        }
+
+        log::info!("{}", directory);
+        copy(
+            &build_dir.join(directory),
+            &dest_dir,
+            &CopyOptions::new().content_only(true),
+        )?;
+    }
+
+    Ok(())
 }
 
 fn handle_supports(
