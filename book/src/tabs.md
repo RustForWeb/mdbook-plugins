@@ -4,7 +4,7 @@ Plugin for rendering content in tabs.
 
 ## Example
 
-{{#tabs global="example" }}
+{{#tabs }}
 {{#tab name="Tab 1" }}
 **Tab content 1**
 {{#endtab }}
@@ -17,14 +17,38 @@ _Tab content 2_
 {{#endtabs }}
 
 {{#tabs global="example" }}
-{{#tab name="Tab 1" }}
+{{#tab name="Global tab 1" }}
 **Other tab content 1**
 {{#endtab }}
-{{#tab name="Tab 2" }}
+{{#tab name="Global tab 2" }}
 _Other tab content 2_
 {{#endtab }}
-{{#tab name="Tab 3" }}
+{{#tab name="Global tab 3" }}
 ~~Other tab content 3~~
+{{#endtab }}
+{{#endtabs }}
+
+{{#tabs global="example" }}
+{{#tab name="Global tab 1" }}
+
+```rust
+let a = 1 + 2;
+```
+
+{{#endtab }}
+{{#tab name="Global tab 2" }}
+
+```python
+a = 1 + 2
+```
+
+{{#endtab }}
+{{#tab name="Global tab 3" }}
+
+```js
+const a = 1 + 2;
+```
+
 {{#endtab }}
 {{#endtabs }}
 

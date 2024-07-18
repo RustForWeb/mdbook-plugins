@@ -43,7 +43,7 @@ pub fn parse_tabs(chapter: &Chapter) -> Result<Vec<(Range<usize>, TabsConfig)>> 
     debug!("{:?}", blocks);
 
     for block in blocks {
-        let start_text = match &block.events[0] {
+        let start_text = match &block.events[0].0 {
             Event::Text(text) => text.to_string(),
             _ => bail!("First event should be text."),
         };
@@ -64,7 +64,7 @@ pub fn parse_tabs(chapter: &Chapter) -> Result<Vec<(Range<usize>, TabsConfig)>> 
         debug!("{:?}", subblocks);
 
         for subblock in subblocks {
-            let start_text = match &subblock.events[0] {
+            let start_text = match &subblock.events[0].0 {
                 Event::Text(text) => text.to_string(),
                 _ => bail!("First event should be text."),
             };

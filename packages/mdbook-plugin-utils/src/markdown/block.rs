@@ -7,17 +7,19 @@ use pulldown_cmark::{Event, Parser};
 #[derive(Clone, Debug, PartialEq)]
 pub struct Block<'a> {
     pub closed: bool,
-    pub events: Vec<Event<'a>>,
+    pub events: Vec<(Event<'a>, Range<usize>)>,
     pub span: Range<usize>,
     pub inner_span: Range<usize>,
 }
 
 impl<'a> Block<'a> {
-    pub fn new(first_event: Event<'a>, span: Range<usize>) -> Self {
+    pub fn new(first_event: Event<'a>, first_span: Range<usize>) -> Self {
+        let span = first_span.clone();
         let inner_span = 0..0;
+
         Block {
             closed: false,
-            events: vec![first_event],
+            events: vec![(first_event, first_span)],
             span,
             inner_span,
         }
@@ -49,26 +51,33 @@ where
         } else if is_end(&event) {
             if let Some(block) = blocks.last_mut() {
                 if !block.closed {
-                    block.events.push(event);
                     block.closed = true;
+                    block.span = block.span.start..span.end;
+                    block.events.push((event, span));
 
-                    if span.end > block.span.end {
-                        block.span = block.span.start..span.end;
+                    let mut seen_first = false;
+                    block.events.retain(|(_, span)| {
+                        if !seen_first {
+                            seen_first = true;
+                            true
+                        } else if span.start == block.span.start && span.end != block.span.end {
+                            false
+                        } else {
+                            span.start >= block.span.start && span.end <= block.span.end
+                        }
+                    });
+
+                    if let (Some((_, first)), Some((_, last))) = (
+                        block.events.get(1),
+                        block.events.get(block.events.len() - 2),
+                    ) {
+                        block.inner_span = first.start..last.end;
                     }
                 }
             }
         } else if let Some(block) = blocks.last_mut() {
-            if !block.closed {
-                block.events.push(event);
-
-                if span.end > block.span.end {
-                    block.span = block.span.start..span.end;
-                }
-
-                block.inner_span = match block.inner_span == (0..0) {
-                    true => span,
-                    false => block.inner_span.start..span.end,
-                };
+            if !block.closed && span.start >= block.span.start {
+                block.events.push((event, span));
             }
         }
     }
@@ -93,9 +102,15 @@ mod test {
         let expected: Vec<Block> = vec![Block {
             closed: true,
             events: vec![
-                Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
-                Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
-                Event::End(TagEnd::CodeBlock),
+                (
+                    Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
+                    0..43,
+                ),
+                (
+                    Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
+                    8..40,
+                ),
+                (Event::End(TagEnd::CodeBlock), 0..43),
             ],
             span: 0..43,
             inner_span: 8..40,
@@ -126,9 +141,15 @@ mod test {
         let expected: Vec<Block> = vec![Block {
             closed: true,
             events: vec![
-                Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
-                Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
-                Event::End(TagEnd::CodeBlock),
+                (
+                    Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
+                    34..77,
+                ),
+                (
+                    Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
+                    42..74,
+                ),
+                (Event::End(TagEnd::CodeBlock), 34..77),
             ],
             span: 34..77,
             inner_span: 42..74,
@@ -166,9 +187,15 @@ mod test {
             Block {
                 closed: true,
                 events: vec![
-                    Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
-                    Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
-                    Event::End(TagEnd::CodeBlock),
+                    (
+                        Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
+                        18..61,
+                    ),
+                    (
+                        Event::Text(CowStr::from("key1 = \"value1\"\nkey2 = \"value2\"\n")),
+                        26..58,
+                    ),
+                    (Event::End(TagEnd::CodeBlock), 18..61),
                 ],
                 span: 18..61,
                 inner_span: 26..58,
@@ -176,9 +203,15 @@ mod test {
             Block {
                 closed: true,
                 events: vec![
-                    Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
-                    Event::Text(CowStr::from("key3 = \"value3\"\nkey4 = \"value4\"\n")),
-                    Event::End(TagEnd::CodeBlock),
+                    (
+                        Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("toml")))),
+                        126..169,
+                    ),
+                    (
+                        Event::Text(CowStr::from("key3 = \"value3\"\nkey4 = \"value4\"\n")),
+                        134..166,
+                    ),
+                    (Event::End(TagEnd::CodeBlock), 126..169),
                 ],
                 span: 126..169,
                 inner_span: 134..166,
@@ -227,27 +260,51 @@ mod test {
     #[test]
     fn test_parse_blocks_text() -> Result<()> {
         let content = "\
-        {{#tabs }}\n\
+        {{#tab }}\n\
         Some content.\n\
-        {{#endtabs }}\n\
+        {{#endtab }}\n\
+        {{#tab }}\n\
+        \n\
+        ```rust\n\
+        let a = 1 + 2;\n\
+        ```\n\
+        \n\
+        {{#endtab }}\n\
         ";
-        let expected: Vec<Block> = vec![Block {
-            closed: true,
-            events: vec![
-                Event::Text(CowStr::from("{{#tabs }}")),
-                Event::SoftBreak,
-                Event::Text(CowStr::from("Some content.")),
-                Event::SoftBreak,
-                Event::Text(CowStr::from("{{#endtabs }}")),
-            ],
-            span: 0..38,
-            inner_span: 10..25,
-        }];
+        let expected: Vec<Block> = vec![
+            Block {
+                closed: true,
+                events: vec![
+                    (Event::Text(CowStr::from("{{#tab }}")), 0..9),
+                    (Event::SoftBreak, 9..10),
+                    (Event::Text(CowStr::from("Some content.")), 10..23),
+                    (Event::SoftBreak, 23..24),
+                    (Event::Text(CowStr::from("{{#endtab }}")), 24..36),
+                ],
+                span: 0..36,
+                inner_span: 9..24,
+            },
+            Block {
+                closed: true,
+                events: vec![
+                    (Event::Text(CowStr::from("{{#tab }}")), 37..46),
+                    (
+                        Event::Start(Tag::CodeBlock(CodeBlockKind::Fenced(CowStr::from("rust")))),
+                        48..74,
+                    ),
+                    (Event::Text(CowStr::from("let a = 1 + 2;\n")), 56..71),
+                    (Event::End(TagEnd::CodeBlock), 48..74),
+                    (Event::Text(CowStr::from("{{#endtab }}")), 76..88),
+                ],
+                span: 37..88,
+                inner_span: 48..74,
+            },
+        ];
 
         let actual = parse_blocks(
             content,
-            |event| matches!(event, Event::Text(text) if text.starts_with("{{#tabs ")),
-            |event| matches!(event, Event::Text(text) if text.starts_with("{{#endtabs ")),
+            |event| matches!(event, Event::Text(text) if text.starts_with("{{#tab ")),
+            |event| matches!(event, Event::Text(text) if text.starts_with("{{#endtab ")),
         )?;
 
         assert_eq!(expected, actual);
