@@ -10,14 +10,20 @@ use crate::config::{TabConfig, TabsConfig};
 
 fn is_tabs_start(event: &Event) -> bool {
     match event {
-        Event::Text(text) => text.to_string() == "{{#tabs}}" || text.starts_with("{{#tabs"),
+        Event::Text(text) => {
+            (text.to_string() == "{{#tabs}}" || text.starts_with("{{#tabs"))
+                && !text.contains("{{#endtabs")
+        }
         _ => false,
     }
 }
 
 fn is_tabs_end(event: &Event) -> bool {
     match event {
-        Event::Text(text) => text.to_string() == "{{#endtabs}}" || text.starts_with("{{#endtabs "),
+        Event::Text(text) => {
+            (text.to_string() == "{{#endtabs}}" || text.starts_with("{{#endtabs "))
+                && !text.contains("{{#tabs ")
+        }
         _ => false,
     }
 }

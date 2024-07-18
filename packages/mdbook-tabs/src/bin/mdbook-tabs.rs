@@ -1,12 +1,15 @@
 use std::{
-    env,
+    env, fs,
     io::{self, Read},
 };
 
 use anyhow::{anyhow, Result};
 use clap::{Args, Parser, Subcommand};
 use log::warn;
-use mdbook::preprocess::{CmdPreprocessor, Preprocessor};
+use mdbook::{
+    preprocess::{CmdPreprocessor, Preprocessor},
+    MDBook,
+};
 use mdbook_tabs::TabsPreprocessor;
 use semver::{Version, VersionReq};
 
@@ -20,6 +23,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    Install,
     Supports(SupportsArgs),
 }
 
@@ -40,10 +44,28 @@ fn main() -> Result<()> {
 
     match &cli.command {
         Some(subcommand) => match subcommand {
+            Commands::Install => handle_install(),
             Commands::Supports(args) => handle_supports(&preprocessor, args),
         },
         None => handle_preprocessing(&preprocessor, io::stdin()),
     }
+}
+
+fn handle_install() -> Result<()> {
+    let book = MDBook::load(env::current_dir()?)?;
+    let directory = book.root.join("theme");
+
+    if !directory.exists() {
+        fs::create_dir(&directory)?;
+    }
+
+    let css_content = include_str!("../theme/tabs.css");
+    let js_content = include_str!("../theme/tabs.js");
+
+    fs::write(directory.join("tabs.css"), css_content)?;
+    fs::write(directory.join("tabs.js"), js_content)?;
+
+    Ok(())
 }
 
 fn handle_supports(
