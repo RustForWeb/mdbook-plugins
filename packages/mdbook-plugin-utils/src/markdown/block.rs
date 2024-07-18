@@ -51,11 +51,20 @@ where
                 if !block.closed {
                     block.events.push(event);
                     block.closed = true;
+
+                    if span.end > block.span.end {
+                        block.span = block.span.start..span.end;
+                    }
                 }
             }
         } else if let Some(block) = blocks.last_mut() {
             if !block.closed {
                 block.events.push(event);
+
+                if span.end > block.span.end {
+                    block.span = block.span.start..span.end;
+                }
+
                 block.inner_span = match block.inner_span == (0..0) {
                     true => span,
                     false => block.inner_span.start..span.end,
@@ -211,6 +220,37 @@ mod test {
             "Block is not closed. Nested blocks are not supported.",
             format!("{}", actual.unwrap_err().root_cause())
         );
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_parse_blocks_text() -> Result<()> {
+        let content = "\
+        {{#tabs }}\n\
+        Some content.\n\
+        {{#endtabs }}\n\
+        ";
+        let expected: Vec<Block> = vec![Block {
+            closed: true,
+            events: vec![
+                Event::Text(CowStr::from("{{#tabs }}")),
+                Event::SoftBreak,
+                Event::Text(CowStr::from("Some content.")),
+                Event::SoftBreak,
+                Event::Text(CowStr::from("{{#endtabs }}")),
+            ],
+            span: 0..38,
+            inner_span: 10..25,
+        }];
+
+        let actual = parse_blocks(
+            content,
+            |event| matches!(event, Event::Text(text) if text.starts_with("{{#tabs ")),
+            |event| matches!(event, Event::Text(text) if text.starts_with("{{#endtabs ")),
+        )?;
+
+        assert_eq!(expected, actual);
 
         Ok(())
     }

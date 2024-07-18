@@ -7,7 +7,7 @@ use mdbook::{
     BookItem,
 };
 
-// use crate::{parser::definition::parse_definitions, trunk::iframe};
+use crate::{parser::tabs::parse_tabs, tabs::tabs};
 
 pub struct TabsPreprocessor;
 
@@ -44,10 +44,19 @@ impl Preprocessor for TabsPreprocessor {
 fn process_items(items: &mut Vec<BookItem>) -> Result<()> {
     for section in items {
         if let BookItem::Chapter(chapter) = section {
-            // let blocks = parse_definitions(chapter)?;
-            // for (span, config) in blocks {
-            //     chapter.content.replace_range(span, &iframe(&config)?);
-            // }
+            let configs = parse_tabs(chapter)?;
+
+            let mut offset: usize = 0;
+
+            for (span, config) in configs {
+                let replacement = tabs(&config);
+
+                chapter
+                    .content
+                    .replace_range((span.start + offset)..(span.end + offset), &replacement);
+
+                offset += replacement.len() - span.len();
+            }
 
             process_items(&mut chapter.sub_items)?;
         }
