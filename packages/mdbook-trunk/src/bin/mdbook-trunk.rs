@@ -92,7 +92,7 @@ fn handle_combine() -> Result<()> {
 
         log::info!("Adding directory `{}`.", directory);
         copy(
-            &build_dir.join(directory),
+            build_dir.join(directory),
             &dest_dir,
             &CopyOptions::new().content_only(true),
         )?;
