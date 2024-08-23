@@ -2,7 +2,7 @@ use std::{path::Path, process::Command, str};
 
 use anyhow::{bail, Result};
 use cargo::core::Workspace;
-use htmlentity::entity::{encode, EncodeType, ICodedDataTrait};
+use htmlentity::entity::{encode, CharacterSet, EncodeType, ICodedDataTrait};
 use log::{error, info};
 
 use crate::config::Config;
@@ -14,11 +14,11 @@ pub fn iframe(config: &Config) -> Result<String> {
         class=\"mdbook-trunk-iframe\" \
         src=\"/{}/index.html{}{}\" \
         style=\"border: .1em solid var(--quote-border); border-radius: 5px; width: 100%;\"\
-        ></iframe>",
+        {}></iframe>",
         encode(
             serde_json::to_string(config)?.as_bytes(),
             &EncodeType::Named,
-            &htmlentity::entity::CharacterSet::SpecialChars
+            &CharacterSet::SpecialChars
         )
         .to_string()?,
         config.dest_name(),
@@ -32,6 +32,23 @@ pub fn iframe(config: &Config) -> Result<String> {
             .as_ref()
             .map(|fragment| format!("#{}", fragment.trim_start_matches("#")))
             .unwrap_or("".into()),
+        config
+            .attributes
+            .as_ref()
+            .map(|attributes| attributes
+                .iter()
+                .filter_map(|(key, value)| encode(
+                    value.as_bytes(),
+                    &EncodeType::Named,
+                    &CharacterSet::SpecialChars
+                )
+                .to_string()
+                .ok()
+                .map(|value| format!("{key}=\"{value}\"")))
+                .collect::<Vec<_>>()
+                .join(" "))
+            .map(|s| format!(" {s}"))
+            .unwrap_or("".into())
     ))
 }
 

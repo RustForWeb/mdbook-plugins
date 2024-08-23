@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{collections::HashMap, path::PathBuf};
 
 use anyhow::{anyhow, Result};
 use cargo::{core::Workspace, ops::Packages};
@@ -10,6 +10,7 @@ pub struct Config {
     pub features: Vec<String>,
     pub url_query: Option<String>,
     pub url_fragment: Option<String>,
+    pub attributes: Option<HashMap<String, String>>,
 }
 
 impl Config {
