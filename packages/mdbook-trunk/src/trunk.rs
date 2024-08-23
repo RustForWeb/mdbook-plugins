@@ -12,7 +12,7 @@ pub fn iframe(config: &Config) -> Result<String> {
         "<iframe \
         data-mdbook-trunk=\"{}\" \
         class=\"mdbook-trunk-iframe\" \
-        src=\"/{}/index.html\" \
+        src=\"/{}/index.html{}{}\" \
         style=\"border: .1em solid var(--quote-border); border-radius: 5px; width: 100%;\"\
         ></iframe>",
         encode(
@@ -22,6 +22,16 @@ pub fn iframe(config: &Config) -> Result<String> {
         )
         .to_string()?,
         config.dest_name(),
+        config
+            .url_query
+            .as_ref()
+            .map(|query| format!("?{}", query.trim_start_matches("?")))
+            .unwrap_or("".into()),
+        config
+            .url_fragment
+            .as_ref()
+            .map(|fragment| format!("#{}", fragment.trim_start_matches("#")))
+            .unwrap_or("".into()),
     ))
 }
 

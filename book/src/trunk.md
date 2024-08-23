@@ -44,6 +44,24 @@ features = ["button"]
 ```
 ````
 
+The following options are available:
+
+```toml
+# Package to build, must be in the current workspace.
+package = "book-example"
+
+# Features to enable for the package.
+features = ["button"]
+
+# URL query (optional).
+# The leading question mark is optional.
+url_query = "?key=value"
+
+# URL fragment (optional).
+# The leading hash is optional.
+url_fragment = "#header"
+```
+
 ## Building
 
 1. Build the book using `mdbook build`. This will output multiple directories in `book/build`.

@@ -8,6 +8,8 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub package: String,
     pub features: Vec<String>,
+    pub url_query: Option<String>,
+    pub url_fragment: Option<String>,
 }
 
 impl Config {
