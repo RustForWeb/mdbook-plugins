@@ -12,8 +12,8 @@ command = "cargo run -p mdbook-tabs"
 command = "cargo run -p mdbook-trunk"
 
 [output.html]
-additional-css = ["theme/tabs.css"]
-additional-js = ["theme/tabs.js"]
+additional-css = ["theme/tabs.css", "theme/trunk.css"]
+additional-js = ["theme/tabs.js", "theme/trunk.js"]
 
 [output.trunk]
 command = "cargo run -p mdbook-trunk"

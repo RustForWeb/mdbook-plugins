@@ -1,4 +1,4 @@
-use std::{path::Path, process::Command, str};
+use std::{fs, path::Path, process::Command, str};
 
 use anyhow::{bail, Result};
 use cargo::core::Workspace;
@@ -7,13 +7,20 @@ use log::{error, info};
 
 use crate::config::Config;
 
+pub fn trunk(workspace: &Workspace, config: &Config) -> Result<String> {
+    Ok(format!(
+        "{}\n\n{}",
+        iframe(config)?,
+        files(workspace, config)?
+    ))
+}
+
 pub fn iframe(config: &Config) -> Result<String> {
     Ok(format!(
         "<iframe \
         data-mdbook-trunk=\"{}\" \
         class=\"mdbook-trunk-iframe\" \
         src=\"/{}/index.html{}{}\" \
-        style=\"border: .1em solid var(--quote-border); border-radius: 5px; width: 100%;\"\
         {}></iframe>",
         encode(
             serde_json::to_string(config)?.as_bytes(),
@@ -49,6 +56,49 @@ pub fn iframe(config: &Config) -> Result<String> {
                 .join(" "))
             .map(|s| format!(" {s}"))
             .unwrap_or("".into())
+    ))
+}
+
+fn files(workspace: &Workspace, config: &Config) -> Result<String> {
+    let package_root = config.package_root(workspace)?;
+
+    let mut header_elements: Vec<String> = vec![];
+    let mut content_elements: Vec<String> = vec![];
+
+    if let Some(files) = config.files.as_ref() {
+        for file in files {
+            let file_path = package_root.join(file);
+
+            info!(
+                "Loading source file `{}`",
+                file_path.to_str().unwrap_or_default()
+            );
+
+            let language = file_path.extension().and_then(|s| s.to_str()).unwrap_or("");
+            let content = fs::read_to_string(&file_path)?;
+
+            header_elements.push(format!(
+                "<button class=\"mdbook-trunk-file\" data-file=\"{}\">{}</button>",
+                file,
+                file_path
+                    .file_name()
+                    .and_then(|s| s.to_str())
+                    .unwrap_or(file),
+            ));
+
+            content_elements.push(format!(
+                "<div class=\"mdbook-trunk-file-content hidden\" data-file=\"{}\">\n\n```{}\n{}\n```\n\n</div>",
+                file,
+                language,
+                content
+            ));
+        }
+    }
+
+    Ok(format!(
+        "<div class=\"mdbook-trunk-files-container\">\n<nav class=\"mdbook-trunk-files\">\n{}\n</nav>\n{}\n</div>",
+        header_elements.join("\n"),
+        content_elements.join("\n")
     ))
 }
 

@@ -27,6 +27,7 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     Combine,
+    Install,
     Supports(SupportsArgs),
 }
 
@@ -49,6 +50,7 @@ fn main() -> Result<()> {
     match &cli.command {
         Some(subcommand) => match subcommand {
             Commands::Combine => handle_combine(),
+            Commands::Install => handle_install(),
             Commands::Supports(args) => handle_supports(&preprocessor, args),
         },
         None => {
@@ -97,6 +99,23 @@ fn handle_combine() -> Result<()> {
             &CopyOptions::new().content_only(true),
         )?;
     }
+
+    Ok(())
+}
+
+fn handle_install() -> Result<()> {
+    let book = MDBook::load(env::current_dir()?)?;
+    let directory = book.root.join("theme");
+
+    if !directory.exists() {
+        fs::create_dir(&directory)?;
+    }
+
+    let css_content = include_str!("../theme/trunk.css");
+    let js_content = include_str!("../theme/trunk.js");
+
+    fs::write(directory.join("trunk.css"), css_content)?;
+    fs::write(directory.join("trunk.js"), js_content)?;
 
     Ok(())
 }
