@@ -1,13 +1,14 @@
-use std::str;
+use std::{env, str};
 
 use anyhow::Result;
+use cargo::{core::Workspace, util::important_paths::find_root_manifest_for_wd, GlobalContext};
 use mdbook::{
     book::Book,
     preprocess::{Preprocessor, PreprocessorContext},
     BookItem,
 };
 
-use crate::{parser::definition::parse_definitions, trunk::iframe};
+use crate::{parser::definition::parse_definitions, trunk::trunk};
 
 pub struct TrunkPreprocessor;
 
@@ -31,7 +32,10 @@ impl Preprocessor for TrunkPreprocessor {
     fn run(&self, _ctx: &PreprocessorContext, book: Book) -> Result<Book> {
         let mut book = book.clone();
 
-        process_items(&mut book.sections)?;
+        let gctx = GlobalContext::default()?;
+        let workspace = Workspace::new(&find_root_manifest_for_wd(&env::current_dir()?)?, &gctx)?;
+
+        process_items(&workspace, &mut book.sections)?;
 
         Ok(book)
     }
@@ -41,7 +45,7 @@ impl Preprocessor for TrunkPreprocessor {
     }
 }
 
-fn process_items(items: &mut Vec<BookItem>) -> Result<()> {
+fn process_items(workspace: &Workspace, items: &mut Vec<BookItem>) -> Result<()> {
     for section in items {
         if let BookItem::Chapter(chapter) = section {
             let blocks = parse_definitions(chapter)?;
@@ -49,7 +53,7 @@ fn process_items(items: &mut Vec<BookItem>) -> Result<()> {
             let mut offset: usize = 0;
 
             for (span, config) in blocks {
-                let replacement = iframe(&config)?;
+                let replacement = trunk(workspace, &config)?;
 
                 chapter
                     .content
@@ -58,7 +62,7 @@ fn process_items(items: &mut Vec<BookItem>) -> Result<()> {
                 offset += replacement.len() - span.len();
             }
 
-            process_items(&mut chapter.sub_items)?;
+            process_items(workspace, &mut chapter.sub_items)?;
         }
     }
 

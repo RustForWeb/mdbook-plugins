@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub package: String,
     pub features: Vec<String>,
+    pub files: Option<Vec<String>>,
     pub url_query: Option<String>,
     pub url_fragment: Option<String>,
     pub attributes: Option<HashMap<String, String>>,
