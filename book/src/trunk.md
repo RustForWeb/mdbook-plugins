@@ -53,13 +53,17 @@ package = "book-example"
 # Features to enable for the package.
 features = ["button"]
 
-# URL query (optional).
+# URL query for the iframe URL (optional).
 # The leading question mark is optional.
 url_query = "?key=value"
 
-# URL fragment (optional).
+# URL fragment for the iframe URL (optional).
 # The leading hash is optional.
 url_fragment = "#header"
+
+# HTML attributes for the iframe (optional).
+[attributes]
+allow = "fullscreen"
 ```
 
 ## Building
