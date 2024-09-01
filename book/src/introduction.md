@@ -4,3 +4,13 @@ mdBook Plugins is a collection of plugins for [mdBook](https://rust-lang.github.
 
 -   [Tabs - `mdbook-tabs`](./tabs.md)
 -   [Trunk - `mdbook-trunk`](./trunk.md)
+
+## License
+
+This project is available under the [MIT license](https://github.com/RustForWeb/mdbook-plugins/blob/main/LICENSE.md).
+
+## Rust For Web
+
+The mdBook Plugins project is part of the [Rust For Web](https://github.com/RustForWeb).
+
+[Rust For Web](https://github.com/RustForWeb) creates and ports web UI libraries for Rust. All projects are free and open source.

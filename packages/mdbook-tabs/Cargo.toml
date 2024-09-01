@@ -1,6 +1,7 @@
 [package]
 name = "mdbook-tabs"
 description = "mdBook plugin for rendering content in tabs."
+homepage = "https://mdbook-plugins.rustforweb.org/tabs.html"
 
 authors.workspace = true
 edition.workspace = true

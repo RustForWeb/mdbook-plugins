@@ -1,6 +1,7 @@
 [package]
 name = "mdbook-trunk"
 description = "mdBook plugin which bundles packages using Trunk and includes them as iframes."
+homepage = "https://mdbook-plugins.rustforweb.org/trunk.html"
 
 authors.workspace = true
 edition.workspace = true

@@ -1,6 +1,7 @@
 [package]
 name = "mdbook-plugin-utils"
 description = "Utilities for mdBook plugins."
+homepage = "https://mdbook-plugins.rustforweb.org"
 
 authors.workspace = true
 edition.workspace = true

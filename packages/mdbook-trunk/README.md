@@ -2,4 +2,12 @@
 
 [mdBook](https://rust-lang.github.io/mdBook/) plugin which bundles packages using Trunk and includes them as iframes.
 
-See [the book](https://mdbook-plugins.rustforweb.org/trunk.html) for an example and documentation.
+## Documentation
+
+See [the mdBook Plugins book](https://mdbook-plugins.rustforweb.org/) for documentation.
+
+## Rust For Web
+
+The mdBook Plugins project is part of the [Rust For Web](https://github.com/RustForWeb).
+
+[Rust For Web](https://github.com/RustForWeb) creates and ports web UI libraries for Rust. All projects are free and open source.
