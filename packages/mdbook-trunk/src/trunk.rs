@@ -32,12 +32,12 @@ pub fn iframe(config: &Config) -> Result<String> {
         config
             .url_query
             .as_ref()
-            .map(|query| format!("?{}", query.trim_start_matches("?")))
+            .map(|query| format!("?{}", query.trim_start_matches('?')))
             .unwrap_or("".into()),
         config
             .url_fragment
             .as_ref()
-            .map(|fragment| format!("#{}", fragment.trim_start_matches("#")))
+            .map(|fragment| format!("#{}", fragment.trim_start_matches('#')))
             .unwrap_or("".into()),
         config
             .attributes
