@@ -30,8 +30,8 @@ jobs:
             - name: Install Cargo Binary Install
               uses: cargo-bins/cargo-binstall@main
 
-            - name: Install mdBook
-              run: cargo binstall -y mdbook
+            - name: Install mdBook and Trunk
+              run: cargo binstall -y mdbook trunk
 
             - name: Run tests
               run: mdbook test
