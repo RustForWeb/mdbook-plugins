@@ -46,6 +46,10 @@ jobs:
                   rustup component add llvm-tools-preview --toolchain stable
                   rustup component add rust-std-${{ matrix.target }} --toolchain stable
 
+            - name: Set up target (aarch64-unknown-linux-*)
+              if: ${{ startsWith(matrix.target, 'aarch64-unknown-linux-') }}
+              run: sudo apt update -y && sudo apt install -y gcc-aarch64-linux-gnu
+
             - name: Set up target (*-musl)
               if: ${{ endsWith(matrix.target, '-musl') }}
               run: sudo apt update -y && sudo apt install -y musl-dev musl-tools
@@ -53,31 +57,34 @@ jobs:
             - name: Set up target (aarch64-unknown-linux-musl)
               if: ${{ matrix.target == 'aarch64-unknown-linux-musl' }}
               run: |
-                  sudo apt update -y && sudo apt install -y gcc-aarch64-linux-gnu
                   echo CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=rust-lld >> $GITHUB_ENV
                   echo CC=aarch64-linux-gnu-gcc >> $GITHUB_ENV
+
+            - name: Install dependenies (*-linux-*)
+              if: ${{ contains(matrix.target, '-linux-') }}
+              run: sudo apt update -y && sudo apt install -y libssl-dev
 
             - name: Build
               run: cargo build --bins --locked --release --target ${{ matrix.target }}
 
             - name: Archive (tar.gz)
-              if: ${{ !contains(matrix.os, 'windows') }}
+              if: ${{ !contains(matrix.target, '-windows-') }}
               run: tar czf ../../${{ matrix.package }}-${{ github.ref_name }}-${{ matrix.target }}.tar.gz ${{ matrix.package }}
               working-directory: target/${{ matrix.target }}/release
 
             - name: Archive (zip)
-              if: ${{ contains(matrix.os, 'windows') }}
+              if: ${{ contains(matrix.target, '-windows-') }}
               run: 7z a ../../${{ matrix.package }}-${{ github.ref_name }}-${{ matrix.target }}.zip ${{ matrix.package }}.exe
               working-directory: target/${{ matrix.target }}/release
 
             - name: Upload release asset (tar.gz)
-              if: ${{ !contains(matrix.os, 'windows') }}
+              if: ${{ !contains(matrix.target, '-windows-') }}
               uses: softprops/action-gh-release@v2
               with:
-                  files: ${{ matrix.package }}-${{ github.ref_name }}-${{ matrix.target }}.tar.gz
+                  files: target/${{ matrix.package }}-${{ github.ref_name }}-${{ matrix.target }}.tar.gz
 
             - name: Upload release asset (zip)
-              if: ${{ contains(matrix.os, 'windows') }}
+              if: ${{ contains(matrix.target, '-windows-') }}
               uses: softprops/action-gh-release@v2
               with:
-                  files: ${{ matrix.package }}-${{ github.ref_name }}-${{ matrix.target }}.zip
+                  files: target/${{ matrix.package }}-${{ github.ref_name }}-${{ matrix.target }}.zip
