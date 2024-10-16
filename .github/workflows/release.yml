@@ -49,8 +49,8 @@ jobs:
             - name: Set up target (aarch64-unknown-linux-*)
               if: ${{ startsWith(matrix.target, 'aarch64-unknown-linux-') }}
               run: |
-                  sudo dpkg --add-architecture arm64
                   sudo apt update -y
+                  sudo dpkg --add-architecture arm64
                   sudo apt install -y gcc-aarch64-linux-gnu libssl-dev:arm64
 
             - name: Set up target (*-musl)
