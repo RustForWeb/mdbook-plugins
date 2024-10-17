@@ -52,13 +52,20 @@ jobs:
                   sudo apt update -y
                   sudo apt install -y musl-dev musl-tools
 
-            - name: Set up target (aarch64-unknown-linux-*)
-              if: ${{ startsWith(matrix.target, 'aarch64-unknown-linux-') }}
+            - name: Set up target (aarch64-unknown-linux-gnu)
+              if: ${{ matrix.target == 'aarch64-unknown-linux-gnu' }}
               run: |
                   sudo apt update -y
                   sudo apt install -y gcc-aarch64-linux-gnu
                   echo CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc >> $GITHUB_ENV
+
+            - name: Set up target (aarch64-unknown-linux-musl)
+              if: ${{ matrix.target == 'aarch64-unknown-linux-musl' }}
+              run: |
+                  sudo apt update -y
+                  sudo apt install -y gcc-aarch64-linux-gnu
                   echo CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=rust-lld >> $GITHUB_ENV
+                  echo CC=aarch64-linux-gnu-gcc >> $GITHUB_ENV
 
             - name: Build
               run: cargo build --bins --locked --release --target ${{ matrix.target }}
