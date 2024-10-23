@@ -86,6 +86,11 @@ url_fragment = "#header"
 # HTML attributes for the iframe (optional).
 [attributes]
 allow = "fullscreen"
+
+# Replacements to apply on files (optional).
+[[file_replacements]]
+find = "Some sentence"
+replace = "Another sentence"
 ```
 
 ## Building
