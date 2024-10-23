@@ -72,6 +72,9 @@ features = ["button"]
 # Relative to the package root.
 files = ["src/button.rs"]
 
+# Whether to show files by default (optional).
+show_files = true
+
 # URL query for the iframe URL (optional).
 # The leading question mark is optional.
 url_query = "?key=value"
