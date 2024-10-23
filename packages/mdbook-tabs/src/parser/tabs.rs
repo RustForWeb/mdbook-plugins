@@ -30,7 +30,7 @@ fn is_tabs_end(event: &Event) -> bool {
 
 fn is_tab_start(event: &Event) -> bool {
     match event {
-        Event::Text(text) => text.to_string() == "{{#tab}}" || text.starts_with("{{#tab"),
+        Event::Text(text) => text.to_string() == "{{#tab}}" || text.starts_with("{{#tab "),
         _ => false,
     }
 }
@@ -42,13 +42,15 @@ fn is_tab_end(event: &Event) -> bool {
     }
 }
 
-pub fn parse_tabs(chapter: &Chapter) -> Result<Vec<(Range<usize>, TabsConfig)>> {
+type SpanAndTabs = (Range<usize>, TabsConfig);
+
+pub fn parse_tabs(chapter: &Chapter) -> Result<(Vec<SpanAndTabs>, bool)> {
     let mut configs: Vec<(Range<usize>, TabsConfig)> = vec![];
 
-    let blocks = parse_blocks(&chapter.content, is_tabs_start, is_tabs_end)?;
+    let blocks = parse_blocks(&chapter.content, is_tabs_start, is_tabs_end, true)?;
     debug!("{:?}", blocks);
 
-    for block in blocks {
+    for block in &blocks {
         let start_text = match &block.events[0].0 {
             Event::Text(text) => text.to_string(),
             _ => bail!("First event should be text."),
@@ -66,6 +68,7 @@ pub fn parse_tabs(chapter: &Chapter) -> Result<Vec<(Range<usize>, TabsConfig)>> 
             &chapter.content[block.inner_span.clone()],
             is_tab_start,
             is_tab_end,
+            true,
         )?;
         debug!("{:?}", subblocks);
 
@@ -89,10 +92,10 @@ pub fn parse_tabs(chapter: &Chapter) -> Result<Vec<(Range<usize>, TabsConfig)>> 
             ));
         }
 
-        configs.push((block.span, tabs));
+        configs.push((block.span.clone(), tabs));
     }
 
     debug!("{:?}", configs);
 
-    Ok(configs)
+    Ok((configs, blocks.iter().any(|block| block.has_nested)))
 }

@@ -28,5 +28,10 @@ pub fn parse_code_blocks<IsTagsFn>(content: &str, is_tags: IsTagsFn) -> Result<V
 where
     IsTagsFn: Fn(Vec<String>) -> bool + 'static,
 {
-    parse_blocks(content, is_code_block_start(is_tags), is_code_block_end)
+    parse_blocks(
+        content,
+        is_code_block_start(is_tags),
+        is_code_block_end,
+        false,
+    )
 }

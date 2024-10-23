@@ -4,14 +4,13 @@ Plugin which bundles packages using Trunk and includes them as iframes.
 
 ## Example
 
+All examples are part of the [book source code](https://github.com/RustForWeb/mdbook-plugins/tree/main/book).
+
 ```toml,trunk
 package = "book-example"
 features = ["button"]
 files = ["src/button.rs"]
 ```
-
--   [Book source code](https://github.com/RustForWeb/mdbook-plugins/tree/main/book)
--   [Example source code](https://github.com/RustForWeb/mdbook-plugins/tree/main/book-example)
 
 ## Installation
 
