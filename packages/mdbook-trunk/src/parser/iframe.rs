@@ -24,7 +24,7 @@ fn is_iframe_end(event: &Event) -> bool {
 pub fn parse_iframes(chapter: &Chapter) -> Result<Vec<(Range<usize>, Config)>> {
     let mut configs: Vec<(Range<usize>, Config)> = vec![];
 
-    let blocks = parse_blocks(&chapter.content, is_iframe_start, is_iframe_end)?;
+    let blocks = parse_blocks(&chapter.content, is_iframe_start, is_iframe_end, false)?;
     debug!("{:?}", blocks);
 
     for block in blocks {

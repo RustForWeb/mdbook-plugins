@@ -4,6 +4,10 @@ Plugin for rendering content in tabs.
 
 ## Example
 
+All examples are part of the [book source code](https://github.com/RustForWeb/mdbook-plugins/tree/main/book).
+
+### Basic
+
 {{#tabs }}
 {{#tab name="Tab 1" }}
 **Tab content 1**
@@ -15,6 +19,8 @@ _Tab content 2_
 ~~Tab content 3~~
 {{#endtab }}
 {{#endtabs }}
+
+### Global
 
 {{#tabs global="example" }}
 {{#tab name="Global tab 1" }}
@@ -52,7 +58,36 @@ const a = 1 + 2;
 {{#endtab }}
 {{#endtabs }}
 
--   [Book source code](https://github.com/RustForWeb/mdbook-plugins/tree/main/book)
+### Nested Tabs
+
+{{#tabs }}
+{{#tab name="Top tab 1" }}
+Level 1 - Item 1
+
+{{#tabs }}
+{{#tab name="Nested tab 1.1" }}
+Level 2 - Item 1.1
+{{#endtab }}
+{{#tab name="Nested tab 1.2" }}
+Level 2 - Item 1.2
+{{#endtab }}
+{{#endtabs }}
+
+{{#endtab }}
+{{#tab name="Top tab 2" }}
+Level 1 - Item 2
+
+{{#tabs }}
+{{#tab name="Nested tab 2.1" }}
+Level 2 - Item 2.1
+{{#endtab }}
+{{#tab name="Nested tab 2.2" }}
+Level 2 - Item 2.2
+{{#endtab }}
+{{#endtabs }}
+
+{{#endtab }}
+{{#endtabs }}
 
 ## Installation
 

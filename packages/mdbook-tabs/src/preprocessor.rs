@@ -1,6 +1,6 @@
 use std::str;
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use mdbook::{
     book::Book,
     preprocess::{Preprocessor, PreprocessorContext},
@@ -44,18 +44,30 @@ impl Preprocessor for TabsPreprocessor {
 fn process_items(items: &mut Vec<BookItem>) -> Result<()> {
     for section in items {
         if let BookItem::Chapter(chapter) = section {
-            let configs = parse_tabs(chapter)?;
+            loop {
+                let (configs, has_nested) = parse_tabs(chapter)?;
 
-            let mut offset: usize = 0;
+                let mut offset: isize = 0;
 
-            for (span, config) in configs {
-                let replacement = tabs(&config);
+                for (span, config) in configs {
+                    let replacement = tabs(&config);
 
-                chapter
-                    .content
-                    .replace_range((span.start + offset)..(span.end + offset), &replacement);
+                    let start = span.start as isize + offset;
+                    let end = span.end as isize + offset;
+                    if start < 0 || end < 0 {
+                        bail!("Negative range {}..{}.", start, end);
+                    }
 
-                offset += replacement.len() - span.len();
+                    chapter
+                        .content
+                        .replace_range(start as usize..end as usize, &replacement);
+
+                    offset += replacement.len() as isize - span.len() as isize;
+                }
+
+                if !has_nested {
+                    break;
+                }
             }
 
             process_items(&mut chapter.sub_items)?;
