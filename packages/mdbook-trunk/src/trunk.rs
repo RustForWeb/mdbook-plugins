@@ -66,7 +66,7 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
     let mut content_elements: Vec<String> = vec![];
 
     if let Some(files) = config.files.as_ref() {
-        for file in files {
+        for (index, file) in files.iter().enumerate() {
             let file_path = package_root.join(file);
 
             info!(
@@ -78,7 +78,10 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
             let content = fs::read_to_string(&file_path)?;
 
             header_elements.push(format!(
-                "<button class=\"mdbook-trunk-file\" data-file=\"{}\">{}</button>",
+                "<button class=\"mdbook-trunk-file{}\" data-file=\"{}\">{}</button>",
+                (config.show_files.unwrap_or(false) && index == 0)
+                    .then_some(" active")
+                    .unwrap_or_default(),
                 file,
                 file_path
                     .file_name()
@@ -87,7 +90,8 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
             ));
 
             content_elements.push(format!(
-                "<div class=\"mdbook-trunk-file-content hidden\" data-file=\"{}\">\n\n```{}\n{}\n```\n\n</div>",
+                "<div class=\"mdbook-trunk-file-content{}\" data-file=\"{}\">\n\n```{}\n{}\n```\n\n</div>",
+                (!(config.show_files.unwrap_or(false) && index == 0)).then_some(" hidden").unwrap_or_default(),
                 file,
                 language,
                 content
@@ -96,7 +100,7 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
     }
 
     Ok(format!(
-        "<div class=\"mdbook-trunk-files-container\">\n<nav class=\"mdbook-trunk-files\">\n{}\n</nav>\n{}\n</div>",
+        "<div class=\"mdbook-trunk-files-container\">\n<nav class=\"mdbook-trunk-files\">\n<span class=\"mdbook-trunk-files-header\">Source code</span>\n{}\n</nav>\n{}\n</div>",
         header_elements.join("\n"),
         content_elements.join("\n")
     ))
