@@ -5,7 +5,7 @@ use cargo::core::Workspace;
 use htmlentity::entity::{encode, CharacterSet, EncodeType, ICodedDataTrait};
 use log::{error, info};
 
-use crate::config::Config;
+use crate::config::{BuildConfig, Config};
 
 pub fn trunk(workspace: &Workspace, config: &Config) -> Result<String> {
     Ok(format!(
@@ -28,7 +28,7 @@ pub fn iframe(config: &Config) -> Result<String> {
             &CharacterSet::SpecialChars
         )
         .to_string()?,
-        config.dest_name(),
+        config.build_config().dest_name(),
         config
             .url_query
             .as_ref()
@@ -60,7 +60,7 @@ pub fn iframe(config: &Config) -> Result<String> {
 }
 
 fn files(workspace: &Workspace, config: &Config) -> Result<String> {
-    let package_root = config.package_root(workspace)?;
+    let package_root = config.build_config().package_root(workspace)?;
 
     let mut header_elements: Vec<String> = vec![];
     let mut content_elements: Vec<String> = vec![];
@@ -106,9 +106,7 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
     ))
 }
 
-pub fn build(workspace: &Workspace, config: Config, dest_dir: &Path) -> Result<()> {
-    let package_root = config.package_root(workspace)?;
-
+pub fn build(config: BuildConfig, package_root: &Path, dest_dir: &Path) -> Result<()> {
     info!(
         "Building `{}` with feature(s) `{}` using Trunk.",
         config.package,
@@ -128,7 +126,11 @@ pub fn build(workspace: &Workspace, config: Config, dest_dir: &Path) -> Result<(
         .output()?;
 
     if !output.status.success() {
-        error!("{}", str::from_utf8(&output.stdout)?);
+        error!(
+            "{}{}",
+            str::from_utf8(&output.stdout)?,
+            str::from_utf8(&output.stderr)?
+        );
         bail!("Trunk build of package `{}` failed.", config.package);
     }
 

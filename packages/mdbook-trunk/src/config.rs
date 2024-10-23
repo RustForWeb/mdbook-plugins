@@ -15,16 +15,13 @@ pub struct Config {
     pub attributes: Option<HashMap<String, String>>,
 }
 
-impl Config {
-    pub fn parse_from_json(content: &str) -> Result<Self, serde_json::error::Error> {
-        serde_json::from_str(content)
-    }
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct BuildConfig {
+    pub package: String,
+    pub features: Vec<String>,
+}
 
-    pub fn parse_from_toml(content: &str) -> Result<Self, toml::de::Error> {
-        log::debug!("{:?}", content);
-        toml::from_str(content)
-    }
-
+impl BuildConfig {
     pub fn dest_name(&self) -> String {
         format!("{}--{}", self.package, self.features.join("--"))
     }
@@ -40,6 +37,24 @@ impl Config {
                 "Package `{}` not found in workspace.",
                 self.package
             ))
+        }
+    }
+}
+
+impl Config {
+    pub fn parse_from_json(content: &str) -> Result<Self, serde_json::error::Error> {
+        serde_json::from_str(content)
+    }
+
+    pub fn parse_from_toml(content: &str) -> Result<Self, toml::de::Error> {
+        log::debug!("{:?}", content);
+        toml::from_str(content)
+    }
+
+    pub fn build_config(&self) -> BuildConfig {
+        BuildConfig {
+            package: self.package.clone(),
+            features: self.features.clone(),
         }
     }
 }
