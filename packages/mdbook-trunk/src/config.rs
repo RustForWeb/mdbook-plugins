@@ -5,11 +5,18 @@ use cargo::{core::Workspace, ops::Packages};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct FileReplacement {
+    pub find: String,
+    pub replace: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Config {
     pub package: String,
     pub features: Vec<String>,
     pub files: Option<Vec<String>>,
     pub show_files: Option<bool>,
+    pub file_replacements: Option<Vec<FileReplacement>>,
     pub url_query: Option<String>,
     pub url_fragment: Option<String>,
     pub attributes: Option<HashMap<String, String>>,

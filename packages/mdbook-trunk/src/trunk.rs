@@ -75,7 +75,13 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
             );
 
             let language = file_path.extension().and_then(|s| s.to_str()).unwrap_or("");
-            let content = fs::read_to_string(&file_path)?;
+            let mut content = fs::read_to_string(&file_path)?;
+
+            if let Some(file_replacements) = &config.file_replacements {
+                for replacement in file_replacements {
+                    content = content.replace(&replacement.find, &replacement.replace);
+                }
+            }
 
             header_elements.push(format!(
                 "<button class=\"mdbook-trunk-file{}\" data-file=\"{}\">{}</button>",
