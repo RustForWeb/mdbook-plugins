@@ -1,6 +1,6 @@
-use std::{collections::HashSet, env, thread};
+use std::{collections::HashSet, env};
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use cargo::{core::Workspace, util::important_paths::find_root_manifest_for_wd, GlobalContext};
 use mdbook::{renderer::RenderContext, BookItem, Renderer};
 
@@ -31,19 +31,21 @@ impl Renderer for TrunkRenderer {
 
         let builds = process_items(&ctx.book.sections)?;
 
-        let mut handles = vec![];
+        // let mut handles = vec![];
         for build_config in builds {
             let package_root = build_config.package_root(&workspace)?;
             let dest_dir = ctx.destination.join(build_config.dest_name());
 
-            handles.push(thread::spawn(move || {
-                build(build_config, &package_root, &dest_dir)
-            }));
+            // handles.push(thread::spawn(move || {
+            //     build(build_config, &package_root, &dest_dir)
+            // }));
+
+            build(build_config, &package_root, &dest_dir)?;
         }
 
-        for handle in handles {
-            handle.join().map_err(|err| anyhow!("{:?}", err))??;
-        }
+        // for handle in handles {
+        //     handle.join().map_err(|err| anyhow!("{:?}", err))??;
+        // }
 
         Ok(())
     }
