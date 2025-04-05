@@ -3,14 +3,14 @@ use std::{
     io::{self, Read},
 };
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use clap::{Args, Parser, Subcommand};
-use fs_extra::dir::{copy, get_dir_content2, CopyOptions, DirOptions};
+use fs_extra::dir::{CopyOptions, DirOptions, copy, get_dir_content2};
 use log::warn;
 use mdbook::{
+    MDBook, Renderer,
     preprocess::{CmdPreprocessor, Preprocessor},
     renderer::RenderContext,
-    MDBook, Renderer,
 };
 use mdbook_trunk::{TrunkPreprocessor, TrunkRenderer};
 use peekread::{BufPeekReader, PeekRead};

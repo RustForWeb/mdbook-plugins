@@ -1,8 +1,8 @@
 use std::{fs, path::Path, process::Command, str};
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use cargo::core::Workspace;
-use htmlentity::entity::{encode, CharacterSet, EncodeType, ICodedDataTrait};
+use htmlentity::entity::{CharacterSet, EncodeType, ICodedDataTrait, encode};
 use log::{error, info};
 
 use crate::config::{BuildConfig, Config};

@@ -16,7 +16,7 @@ pub fn tabs(config: &TabsConfig) -> String {
                 "<button class=\"mdbook-tab{}\" data-tabname=\"{}\">{}</button>",
                 match index == 0 {
                     true => " active",
-                    false => ""
+                    false => "",
                 },
                 tab.name,
                 tab.name
@@ -31,7 +31,7 @@ pub fn tabs(config: &TabsConfig) -> String {
                 "<div class=\"mdbook-tab-content{}\" data-tabname=\"{}\">\n\n{}\n\n</div>",
                 match index == 0 {
                     true => "",
-                    false => " hidden"
+                    false => " hidden",
                 },
                 tab.name,
                 tab_content

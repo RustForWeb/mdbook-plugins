@@ -1,10 +1,10 @@
 use std::str;
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use mdbook::{
+    BookItem,
     book::Book,
     preprocess::{Preprocessor, PreprocessorContext},
-    BookItem,
 };
 
 use crate::{parser::tabs::parse_tabs, tabs::tabs};

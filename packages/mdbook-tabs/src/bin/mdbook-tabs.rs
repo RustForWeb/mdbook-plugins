@@ -3,12 +3,12 @@ use std::{
     io::{self, Read},
 };
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use clap::{Args, Parser, Subcommand};
 use log::warn;
 use mdbook::{
-    preprocess::{CmdPreprocessor, Preprocessor},
     MDBook,
+    preprocess::{CmdPreprocessor, Preprocessor},
 };
 use mdbook_tabs::TabsPreprocessor;
 use semver::{Version, VersionReq};

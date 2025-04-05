@@ -1,8 +1,8 @@
 use std::{collections::HashSet, env};
 
 use anyhow::Result;
-use cargo::{core::Workspace, util::important_paths::find_root_manifest_for_wd, GlobalContext};
-use mdbook::{renderer::RenderContext, BookItem, Renderer};
+use cargo::{GlobalContext, core::Workspace, util::important_paths::find_root_manifest_for_wd};
+use mdbook::{BookItem, Renderer, renderer::RenderContext};
 
 use crate::{config::BuildConfig, parser::iframe::parse_iframes, trunk::build};
 

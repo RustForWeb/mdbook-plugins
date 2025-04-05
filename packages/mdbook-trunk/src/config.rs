@@ -1,6 +1,6 @@
 use std::{collections::HashMap, path::PathBuf};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use cargo::{core::Workspace, ops::Packages};
 use serde::{Deserialize, Serialize};
 

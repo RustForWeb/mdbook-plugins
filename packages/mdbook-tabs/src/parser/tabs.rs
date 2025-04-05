@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use log::debug;
 use mdbook::book::Chapter;
 use mdbook_plugin_utils::markdown::parse_blocks;
