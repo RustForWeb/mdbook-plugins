@@ -17,6 +17,9 @@ jobs:
         name: Release
         runs-on: ubuntu-latest
 
+        outputs:
+            version: ${{ steps.extract-version.outputs.VERSION }}
+
         steps:
             - name: Generate GitHub App token
               id: app-token
@@ -159,10 +162,12 @@ jobs:
               if: ${{ !contains(matrix.target, '-windows-') }}
               uses: softprops/action-gh-release@v2
               with:
+                  tag_name: ${{ needs.release.outputs.version }}
                   files: target/${{ matrix.package }}-${{ github.ref_name }}-${{ matrix.target }}.tar.gz
 
             - name: Upload release asset (zip)
               if: ${{ contains(matrix.target, '-windows-') }}
               uses: softprops/action-gh-release@v2
               with:
+                  tag_name: ${{ needs.release.outputs.version }}
                   files: target/${{ matrix.package }}-${{ github.ref_name }}-${{ matrix.target }}.zip
