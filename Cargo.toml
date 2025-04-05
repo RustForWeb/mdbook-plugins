@@ -4,7 +4,7 @@ resolver = "2"
 
 [workspace.package]
 authors = ["Rust For Web <info@rustforweb.org>"]
-edition = "2021"
+edition = "2024"
 license = "MIT"
 repository = "https://github.com/RustForWeb/mdbook-plugins"
 version = "0.2.1"
@@ -14,7 +14,7 @@ anyhow = "1.0.86"
 clap = { version = "4.5.8", features = ["derive"] }
 env_logger = "0.11.3"
 log = "0.4.22"
-mdbook = "0.4.40"
+mdbook = "0.4.43"
 pulldown-cmark = "0.13.0"
 semver = "1.0.23"
 serde = { version = "1.0.204", features = ["derive"] }

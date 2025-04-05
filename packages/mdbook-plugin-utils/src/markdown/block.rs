@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use log::debug;
 use pulldown_cmark::{Event, Parser};
 

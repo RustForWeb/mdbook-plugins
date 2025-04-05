@@ -1,11 +1,11 @@
 use std::{env, str};
 
 use anyhow::Result;
-use cargo::{core::Workspace, util::important_paths::find_root_manifest_for_wd, GlobalContext};
+use cargo::{GlobalContext, core::Workspace, util::important_paths::find_root_manifest_for_wd};
 use mdbook::{
+    BookItem,
     book::Book,
     preprocess::{Preprocessor, PreprocessorContext},
-    BookItem,
 };
 
 use crate::{parser::definition::parse_definitions, trunk::trunk};

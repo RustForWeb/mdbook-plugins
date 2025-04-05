@@ -1,7 +1,7 @@
 use anyhow::Result;
 use pulldown_cmark::{CodeBlockKind, Event, Tag, TagEnd};
 
-use crate::markdown::block::{parse_blocks, Block};
+use crate::markdown::block::{Block, parse_blocks};
 
 fn is_code_block_start<IsTagsFn>(is_tags: IsTagsFn) -> Box<dyn Fn(&Event) -> bool>
 where

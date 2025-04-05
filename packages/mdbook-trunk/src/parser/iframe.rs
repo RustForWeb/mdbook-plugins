@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use anyhow::Result;
 use html_parser::{Dom, Node};
-use htmlentity::entity::{decode, ICodedDataTrait};
+use htmlentity::entity::{ICodedDataTrait, decode};
 use log::debug;
 use mdbook::book::Chapter;
 use mdbook_plugin_utils::markdown::parse_blocks;
