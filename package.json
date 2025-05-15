@@ -1,7 +1,7 @@
 {
     "name": "@rustforweb/mdbook-plugins",
     "description": "Plugins for mdBook.",
-    "author": "Rust For Web <info@rustforweb.org>",
+    "author": "Rust for Web <info@rustforweb.org>",
     "repository": "github:RustForWeb/mdbook-plugins",
     "license": "MIT",
     "private": true,
