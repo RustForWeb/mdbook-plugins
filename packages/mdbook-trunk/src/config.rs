@@ -54,7 +54,7 @@ impl Config {
     }
 
     pub fn parse_from_toml(content: &str) -> Result<Self, toml::de::Error> {
-        log::debug!("{:?}", content);
+        log::debug!("{content:?}");
         toml::from_str(content)
     }
 

@@ -85,9 +85,7 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
 
             header_elements.push(format!(
                 "<button class=\"mdbook-trunk-file{}\" data-file=\"{}\">{}</button>",
-                (config.show_files.unwrap_or(false) && index == 0)
-                    .then_some(" active")
-                    .unwrap_or_default(),
+                if config.show_files.unwrap_or(false) && index == 0 { " active" } else { Default::default() },
                 file,
                 file_path
                     .file_name()
@@ -97,7 +95,7 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
 
             content_elements.push(format!(
                 "<div class=\"mdbook-trunk-file-content{}\" data-file=\"{}\">\n\n```{}\n{}\n```\n\n</div>",
-                (!(config.show_files.unwrap_or(false) && index == 0)).then_some(" hidden").unwrap_or_default(),
+                if !(config.show_files.unwrap_or(false) && index == 0) { " hidden" } else { Default::default() },
                 file,
                 language,
                 content

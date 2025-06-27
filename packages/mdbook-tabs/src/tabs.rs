@@ -6,7 +6,7 @@ pub fn tabs(config: &TabsConfig) -> String {
         config
             .global
             .as_ref()
-            .map(|global| format!(" data-tabglobal=\"{}\"", global))
+            .map(|global| format!(" data-tabglobal=\"{global}\""))
             .unwrap_or("".to_string()),
         config
             .tabs

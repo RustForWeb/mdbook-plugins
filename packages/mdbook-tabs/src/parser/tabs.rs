@@ -48,7 +48,7 @@ pub fn parse_tabs(chapter: &Chapter) -> Result<(Vec<SpanAndTabs>, bool)> {
     let mut configs: Vec<(Range<usize>, TabsConfig)> = vec![];
 
     let blocks = parse_blocks(&chapter.content, is_tabs_start, is_tabs_end, true)?;
-    debug!("{:?}", blocks);
+    debug!("{blocks:?}");
 
     for block in &blocks {
         let start_text = match &block.events[0].0 {
@@ -70,7 +70,7 @@ pub fn parse_tabs(chapter: &Chapter) -> Result<(Vec<SpanAndTabs>, bool)> {
             is_tab_end,
             true,
         )?;
-        debug!("{:?}", subblocks);
+        debug!("{subblocks:?}");
 
         for subblock in subblocks {
             let start_text = match &subblock.events[0].0 {
@@ -95,7 +95,7 @@ pub fn parse_tabs(chapter: &Chapter) -> Result<(Vec<SpanAndTabs>, bool)> {
         configs.push((block.span.clone(), tabs));
     }
 
-    debug!("{:?}", configs);
+    debug!("{configs:?}");
 
     Ok((configs, blocks.iter().any(|block| block.has_nested)))
 }
