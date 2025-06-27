@@ -42,7 +42,7 @@ where
     let mut nested_level = 0;
 
     for (event, span) in Parser::new(content).into_offset_iter() {
-        debug!("{:?} {:?}", event, span);
+        debug!("{event:?} {span:?}");
 
         if is_start(&event) {
             if let Some(block) = blocks.last_mut() {

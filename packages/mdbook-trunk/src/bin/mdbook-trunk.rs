@@ -76,7 +76,7 @@ fn handle_combine() -> Result<()> {
     let dest_dir = book.root.join("dist");
     let dest_dir_str = dest_dir.to_str().unwrap();
 
-    log::info!("Combining into directory `{}`.", dest_dir_str);
+    log::info!("Combining into directory `{dest_dir_str}`.");
 
     if dest_dir.exists() {
         log::info!("Directory exists, recreating.");
@@ -92,7 +92,7 @@ fn handle_combine() -> Result<()> {
             continue;
         }
 
-        log::info!("Adding directory `{}`.", directory);
+        log::info!("Adding directory `{directory}`.");
         copy(
             build_dir.join(directory),
             &dest_dir,

@@ -25,7 +25,7 @@ pub fn parse_iframes(chapter: &Chapter) -> Result<Vec<(Range<usize>, Config)>> {
     let mut configs: Vec<(Range<usize>, Config)> = vec![];
 
     let blocks = parse_blocks(&chapter.content, is_iframe_start, is_iframe_end, false)?;
-    debug!("{:?}", blocks);
+    debug!("{blocks:?}");
 
     for block in blocks {
         let dom = Dom::parse(&chapter.content[block.span.clone()])?;
@@ -53,7 +53,7 @@ pub fn parse_iframes(chapter: &Chapter) -> Result<Vec<(Range<usize>, Config)>> {
         configs.push((block.span, config));
     }
 
-    debug!("{:?}", configs);
+    debug!("{configs:?}");
 
     Ok(configs)
 }
