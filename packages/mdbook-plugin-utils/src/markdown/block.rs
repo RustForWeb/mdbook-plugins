@@ -33,7 +33,7 @@ pub fn parse_blocks<IsStartFn, IsEndFn>(
     is_start: IsStartFn,
     is_end: IsEndFn,
     skip_nested: bool,
-) -> Result<Vec<Block>>
+) -> Result<Vec<Block<'_>>>
 where
     IsStartFn: Fn(&Event) -> bool,
     IsEndFn: Fn(&Event) -> bool,
@@ -45,57 +45,58 @@ where
         debug!("{event:?} {span:?}");
 
         if is_start(&event) {
-            if let Some(block) = blocks.last_mut() {
-                if !block.closed {
-                    if skip_nested {
-                        nested_level += 1;
-                        block.has_nested = true;
-                        block.events.push((event, span));
-                        continue;
-                    } else {
-                        bail!("Block is not closed. Nested blocks are not allowed.");
-                    }
+            if let Some(block) = blocks.last_mut()
+                && !block.closed
+            {
+                if skip_nested {
+                    nested_level += 1;
+                    block.has_nested = true;
+                    block.events.push((event, span));
+                    continue;
+                } else {
+                    bail!("Block is not closed. Nested blocks are not allowed.");
                 }
             }
 
             blocks.push(Block::new(event, span));
         } else if is_end(&event) {
-            if let Some(block) = blocks.last_mut() {
-                if !block.closed {
-                    if nested_level > 0 {
-                        nested_level -= 1;
-                        block.events.push((event, span));
-                        continue;
-                    }
-
-                    block.closed = true;
-                    block.span = block.span.start..span.end;
+            if let Some(block) = blocks.last_mut()
+                && !block.closed
+            {
+                if nested_level > 0 {
+                    nested_level -= 1;
                     block.events.push((event, span));
+                    continue;
+                }
 
-                    let mut seen_first = false;
-                    block.events.retain(|(_, span)| {
-                        if !seen_first {
-                            seen_first = true;
-                            true
-                        } else if span.start == block.span.start && span.end != block.span.end {
-                            false
-                        } else {
-                            span.start >= block.span.start && span.end <= block.span.end
-                        }
-                    });
+                block.closed = true;
+                block.span = block.span.start..span.end;
+                block.events.push((event, span));
 
-                    if let (Some((_, first)), Some((_, last))) = (
-                        block.events.get(1),
-                        block.events.get(block.events.len() - 2),
-                    ) {
-                        block.inner_span = first.start..last.end;
+                let mut seen_first = false;
+                block.events.retain(|(_, span)| {
+                    if !seen_first {
+                        seen_first = true;
+                        true
+                    } else if span.start == block.span.start && span.end != block.span.end {
+                        false
+                    } else {
+                        span.start >= block.span.start && span.end <= block.span.end
                     }
+                });
+
+                if let (Some((_, first)), Some((_, last))) = (
+                    block.events.get(1),
+                    block.events.get(block.events.len() - 2),
+                ) {
+                    block.inner_span = first.start..last.end;
                 }
             }
-        } else if let Some(block) = blocks.last_mut() {
-            if !block.closed && span.start >= block.span.start {
-                block.events.push((event, span));
-            }
+        } else if let Some(block) = blocks.last_mut()
+            && !block.closed
+            && span.start >= block.span.start
+        {
+            block.events.push((event, span));
         }
     }
 

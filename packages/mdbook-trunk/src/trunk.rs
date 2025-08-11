@@ -85,7 +85,11 @@ fn files(workspace: &Workspace, config: &Config) -> Result<String> {
 
             header_elements.push(format!(
                 "<button class=\"mdbook-trunk-file{}\" data-file=\"{}\">{}</button>",
-                if config.show_files.unwrap_or(false) && index == 0 { " active" } else { Default::default() },
+                if config.show_files.unwrap_or(false) && index == 0 {
+                    " active"
+                } else {
+                    Default::default()
+                },
                 file,
                 file_path
                     .file_name()

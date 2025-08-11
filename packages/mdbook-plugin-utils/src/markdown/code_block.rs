@@ -24,7 +24,7 @@ fn is_code_block_end(event: &Event) -> bool {
     matches!(event, Event::End(TagEnd::CodeBlock))
 }
 
-pub fn parse_code_blocks<IsTagsFn>(content: &str, is_tags: IsTagsFn) -> Result<Vec<Block>>
+pub fn parse_code_blocks<IsTagsFn>(content: &str, is_tags: IsTagsFn) -> Result<Vec<Block<'_>>>
 where
     IsTagsFn: Fn(Vec<String>) -> bool + 'static,
 {
