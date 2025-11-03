@@ -62,11 +62,12 @@ dependencies = [
 
 [[package]]
 name = "annotate-snippets"
-version = "0.11.5"
+version = "0.12.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "710e8eae58854cdc1790fcb56cca04d712a17be849eeb81da2a724bf4bae2bc4"
+checksum = "96401ca08501972288ecbcde33902fce858bf73fbcbdf91dab8c3a9544e106bb"
 dependencies = [
  "anstyle",
+ "memchr",
  "unicode-width 0.2.1",
 ]
 
@@ -405,9 +406,9 @@ checksum = "8b96ec4966b5813e2c0507c1f86115c8c5abaadc3980879c3424042a02fd1ad3"
 
 [[package]]
 name = "cargo"
-version = "0.91.0"
+version = "0.92.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f46c7f53180bf46c220e2af1ceff951e2ce088184fa9009ad6915efee25915d"
+checksum = "89389877f508bae1d45a48b4e76cb0dac5e41a6ac5103752e44d29be0c69c394"
 dependencies = [
  "annotate-snippets",
  "anstream",
@@ -484,6 +485,7 @@ dependencies = [
  "url",
  "walkdir",
  "windows-sys 0.60.2",
+ "winnow",
 ]
 
 [[package]]
@@ -503,9 +505,9 @@ dependencies = [
 
 [[package]]
 name = "cargo-credential-libsecret"
-version = "0.5.0"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42fb1e935ce4b67f386202b943abe6538cbf3bc520c8de4cad40434588f6e12d"
+checksum = "90161b8b1b98a28f0fbdfccafb6adcf2b0be948a4fad3acc31461abf5447debe"
 dependencies = [
  "anyhow",
  "cargo-credential",
@@ -514,9 +516,9 @@ dependencies = [
 
 [[package]]
 name = "cargo-credential-macos-keychain"
-version = "0.4.15"
+version = "0.4.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ed2a4071b9baff1491f11e8fbd09ef66fdb49e542438520079b81fb6405d37a"
+checksum = "e95b9c2431165b30ea111f2933ed6799bfa9a66c9503046064cf8f001960ea1b"
 dependencies = [
  "cargo-credential",
  "security-framework",
@@ -524,12 +526,12 @@ dependencies = [
 
 [[package]]
 name = "cargo-credential-wincred"
-version = "0.4.15"
+version = "0.4.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ede93c95e499507ef7b09bd48721660809b7fe7d94ca6094f9dbe617fe067730"
+checksum = "c35397b066a83f2e036fb23fca2fb400bfa65e8e8453c21e0b1690cf8250e414"
 dependencies = [
  "cargo-credential",
- "windows-sys 0.59.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -543,9 +545,9 @@ dependencies = [
 
 [[package]]
 name = "cargo-util"
-version = "0.2.22"
+version = "0.2.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4f46ba11692cd1e4b09cd123877e02b74e180acae237caf905ef20b42e14e206"
+checksum = "f97c9ef0f8af69bfcecfe4c17a414d7bb978fe794bc1a38952e27b5c5d87492d"
 dependencies = [
  "anyhow",
  "core-foundation",
@@ -561,14 +563,14 @@ dependencies = [
  "tempfile",
  "tracing",
  "walkdir",
- "windows-sys 0.59.0",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
 name = "cargo-util-schemas"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b45c9672203db3caf908423f25bc31f3b6a814a9d22f2380048236498a312e75"
+checksum = "549c00f5bb23fdaf26135d747d7530563402a101f1887a5a1916afe2c09cf229"
 dependencies = [
  "semver",
  "serde",
@@ -818,9 +820,9 @@ dependencies = [
 
 [[package]]
 name = "core-foundation"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b55271e5c8c478ad3f38ad24ef34923091e0548492a266d19b3c0b4d82574c63"
+checksum = "b2a6cd9ae233e7f62ba4e9353e81a88df7fc8a5987b8d445b4d90c879bd156f6"
 dependencies = [
  "core-foundation-sys",
  "libc",
@@ -843,9 +845,9 @@ dependencies = [
 
 [[package]]
 name = "crates-io"
-version = "0.40.12"
+version = "0.40.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8022895e0e2ac5156fe59598ff40c7d4354600a56ca12bcf7aa715df2c07159"
+checksum = "574ce0b8170c097cf174097b84bff181956ad2ab2bbe092ab58d1c08d9f1f417"
 dependencies = [
  "curl",
  "percent-encoding",
@@ -2389,9 +2391,9 @@ dependencies = [
 
 [[package]]
 name = "glob"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8d1add55171497b4705a648c6b583acafb01d58050a51727785f0b2c8e0a2b2"
+checksum = "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280"
 
 [[package]]
 name = "globset"
@@ -3260,12 +3262,12 @@ dependencies = [
 
 [[package]]
 name = "libloading"
-version = "0.8.6"
+version = "0.8.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34"
+checksum = "d7c4b02199fee7c5d21a5ae7d8cfa79a6ef5bb2fc834d6e9058e89c825efdc55"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-link 0.2.1",
 ]
 
 [[package]]
@@ -3291,9 +3293,9 @@ dependencies = [
 
 [[package]]
 name = "libsqlite3-sys"
-version = "0.34.0"
+version = "0.35.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91632f3b4fb6bd1d72aa3d78f41ffecfcf2b1a6648d8c241dbe7dbfaf4875e15"
+checksum = "133c182a6a2c87864fe97778797e46c7e999672690dc9fa3ee8e241aa4a9c13f"
 dependencies = [
  "cc",
  "pkg-config",
@@ -4490,9 +4492,9 @@ dependencies = [
 
 [[package]]
 name = "rusqlite"
-version = "0.36.0"
+version = "0.37.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3de23c3319433716cf134eed225fe9986bc24f63bed9be9f20c329029e672dc7"
+checksum = "165ca6e57b20e1351573e3729b958bc62f0e48025386970b6e4d29e7a7e71f3f"
 dependencies = [
  "bitflags 2.9.0",
  "fallible-iterator",
@@ -4606,9 +4608,9 @@ dependencies = [
 
 [[package]]
 name = "security-framework"
-version = "3.2.0"
+version = "3.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "271720403f46ca04f7ba6f55d438f8bd878d6b8ca0a1046e8228c4145bcbb316"
+checksum = "b3297343eaf830f66ede390ea39da1d462b6b0c1b000f420d0a83f898bbbe6ef"
 dependencies = [
  "bitflags 2.9.0",
  "core-foundation",
@@ -4619,9 +4621,9 @@ dependencies = [
 
 [[package]]
 name = "security-framework-sys"
-version = "2.14.0"
+version = "2.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49db231d56a190491cb4aeda9527f1ad45345af50b0851622a7adb8c03b01c32"
+checksum = "cc1f0cbffaac4852523ce30d8bd3c5cdc873501d96ff467ca09b6767bb8cd5c0"
 dependencies = [
  "core-foundation-sys",
  "libc",
@@ -4856,9 +4858,9 @@ dependencies = [
 
 [[package]]
 name = "sha2"
-version = "0.10.8"
+version = "0.10.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "793db75ad2bcafc3ffa7c68b215fee268f537982cd901d132f89c6343f3a3dc8"
+checksum = "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283"
 dependencies = [
  "cfg-if",
  "cpufeatures",
@@ -5867,7 +5869,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
