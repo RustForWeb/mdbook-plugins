@@ -2,8 +2,8 @@ use std::ops::Range;
 
 use anyhow::{Result, bail};
 use log::debug;
-use mdbook::book::Chapter;
 use mdbook_plugin_utils::markdown::parse_blocks;
+use mdbook_preprocessor::book::Chapter;
 use pulldown_cmark::Event;
 
 use crate::config::{TabConfig, TabsConfig};

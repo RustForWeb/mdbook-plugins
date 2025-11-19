@@ -1,10 +1,9 @@
 use std::str;
 
 use anyhow::{Result, bail};
-use mdbook::{
-    BookItem,
-    book::Book,
-    preprocess::{Preprocessor, PreprocessorContext},
+use mdbook_preprocessor::{
+    Preprocessor, PreprocessorContext,
+    book::{Book, BookItem},
 };
 
 use crate::{parser::tabs::parse_tabs, tabs::tabs};
@@ -31,13 +30,13 @@ impl Preprocessor for TabsPreprocessor {
     fn run(&self, _ctx: &PreprocessorContext, book: Book) -> Result<Book> {
         let mut book = book.clone();
 
-        process_items(&mut book.sections)?;
+        process_items(&mut book.items)?;
 
         Ok(book)
     }
 
-    fn supports_renderer(&self, _renderer: &str) -> bool {
-        true
+    fn supports_renderer(&self, _renderer: &str) -> Result<bool> {
+        Ok(true)
     }
 }
 

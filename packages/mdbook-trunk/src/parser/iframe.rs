@@ -4,7 +4,7 @@ use anyhow::Result;
 use html_parser::{Dom, Node};
 use htmlentity::entity::{ICodedDataTrait, decode};
 use log::debug;
-use mdbook::book::Chapter;
+use mdbook_core::book::Chapter;
 use mdbook_plugin_utils::markdown::parse_blocks;
 use pulldown_cmark::{Event, TagEnd};
 

@@ -6,10 +6,9 @@ use std::{
 use anyhow::{Result, anyhow};
 use clap::{Args, Parser, Subcommand};
 use log::warn;
-use mdbook::{
-    MDBook,
-    preprocess::{CmdPreprocessor, Preprocessor},
-};
+use mdbook_driver::MDBook;
+use mdbook_preprocessor::Preprocessor;
+use mdbook_preprocessor::{MDBOOK_VERSION, parse_input};
 use mdbook_tabs::TabsPreprocessor;
 use semver::{Version, VersionReq};
 
@@ -72,23 +71,23 @@ fn handle_supports(
     preprocessor: &dyn Preprocessor,
     SupportsArgs { renderer }: &SupportsArgs,
 ) -> Result<()> {
-    match preprocessor.supports_renderer(renderer) {
+    match preprocessor.supports_renderer(renderer)? {
         true => Ok(()),
         false => Err(anyhow!("Renderer `{renderer}` is not supported.")),
     }
 }
 
 fn handle_preprocessing<R: Read>(preprocessor: &dyn Preprocessor, reader: R) -> Result<()> {
-    let (ctx, book) = CmdPreprocessor::parse_input(reader)?;
+    let (ctx, book) = parse_input(reader)?;
 
     let book_version = Version::parse(&ctx.mdbook_version)?;
-    let version_req = VersionReq::parse(mdbook::MDBOOK_VERSION)?;
+    let version_req = VersionReq::parse(MDBOOK_VERSION)?;
 
     if !version_req.matches(&book_version) {
         warn!(
             "The {} plugin was built against version {} of mdbook, but we're being called from version {}",
             preprocessor.name(),
-            mdbook::MDBOOK_VERSION,
+            MDBOOK_VERSION,
             ctx.mdbook_version
         );
     }

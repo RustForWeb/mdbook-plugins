@@ -2,10 +2,9 @@ use std::{env, str};
 
 use anyhow::Result;
 use cargo::{GlobalContext, core::Workspace, util::important_paths::find_root_manifest_for_wd};
-use mdbook::{
-    BookItem,
-    book::Book,
-    preprocess::{Preprocessor, PreprocessorContext},
+use mdbook_preprocessor::{
+    Preprocessor, PreprocessorContext,
+    book::{Book, BookItem},
 };
 
 use crate::{parser::definition::parse_definitions, trunk::trunk};
@@ -35,13 +34,13 @@ impl Preprocessor for TrunkPreprocessor {
         let gctx = GlobalContext::default()?;
         let workspace = Workspace::new(&find_root_manifest_for_wd(&env::current_dir()?)?, &gctx)?;
 
-        process_items(&workspace, &mut book.sections)?;
+        process_items(&workspace, &mut book.items)?;
 
         Ok(book)
     }
 
-    fn supports_renderer(&self, _renderer: &str) -> bool {
-        true
+    fn supports_renderer(&self, _renderer: &str) -> Result<bool> {
+        Ok(true)
     }
 }
 
