@@ -95,7 +95,7 @@ jobs:
                         x86_64-unknown-linux-musl,
                         aarch64-apple-darwin,
                         x86_64-apple-darwin,
-                        x86_64-pc-windows-msvc
+                        x86_64-pc-windows-msvc,
                     ]
                 include:
                     - target: aarch64-unknown-linux-gnu
@@ -123,8 +123,8 @@ jobs:
             - name: Set up Rust toolchain
               uses: actions-rust-lang/setup-rust-toolchain@v1
               with:
-                  components: clippy, llvm-tools-preview, rustfmt, rust-std-${{ matrix.target }}
-                  target: wasm32-unknown-unknown
+                  components: clippy, llvm-tools-preview, rustfmt, rust-std
+                  target: ${{ matrix.target }}
 
             - name: Set up target (*-musl)
               if: ${{ endsWith(matrix.target, '-musl') }}
