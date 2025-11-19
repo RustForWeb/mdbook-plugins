@@ -14,8 +14,9 @@ anyhow.workspace = true
 clap.workspace = true
 env_logger.workspace = true
 log.workspace = true
-mdbook.workspace = true
+mdbook-driver.workspace = true
 mdbook-plugin-utils = { path = "../mdbook-plugin-utils", version = "0.2.1" }
+mdbook-preprocessor.workspace = true
 pulldown-cmark.workspace = true
 semver.workspace = true
 serde.workspace = true

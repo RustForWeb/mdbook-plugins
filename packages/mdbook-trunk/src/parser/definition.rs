@@ -2,7 +2,7 @@ use std::ops::Range;
 
 use anyhow::Result;
 use log::debug;
-use mdbook::book::Chapter;
+use mdbook_core::book::Chapter;
 use mdbook_plugin_utils::markdown::parse_code_blocks;
 
 use crate::config::Config;

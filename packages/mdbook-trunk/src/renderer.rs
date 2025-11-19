@@ -2,7 +2,7 @@ use std::{collections::HashSet, env};
 
 use anyhow::Result;
 use cargo::{GlobalContext, core::Workspace, util::important_paths::find_root_manifest_for_wd};
-use mdbook::{BookItem, Renderer, renderer::RenderContext};
+use mdbook_renderer::{RenderContext, Renderer, book::BookItem};
 
 use crate::{config::BuildConfig, parser::iframe::parse_iframes, trunk::build};
 
@@ -29,7 +29,7 @@ impl Renderer for TrunkRenderer {
         let gctx = GlobalContext::default()?;
         let workspace = Workspace::new(&find_root_manifest_for_wd(&env::current_dir()?)?, &gctx)?;
 
-        let builds = process_items(&ctx.book.sections)?;
+        let builds = process_items(&ctx.book.items)?;
 
         // let mut handles = vec![];
         for build_config in builds {
