@@ -7,7 +7,7 @@ authors = ["Rust for Web <info@rustforweb.org>"]
 edition = "2024"
 license = "MIT"
 repository = "https://github.com/RustForWeb/mdbook-plugins"
-version = "0.3.1"
+version = "0.3.2"
 
 [workspace.dependencies]
 anyhow = "1.0.86"
