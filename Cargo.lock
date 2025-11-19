@@ -246,7 +246,7 @@ dependencies = [
 
 [[package]]
 name = "book-example"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "console_error_panic_hook",
  "console_log",
@@ -3220,7 +3220,7 @@ dependencies = [
 
 [[package]]
 name = "mdbook-plugin-utils"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "anyhow",
  "log",
@@ -3268,7 +3268,7 @@ dependencies = [
 
 [[package]]
 name = "mdbook-tabs"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "anyhow",
  "clap",
@@ -3286,7 +3286,7 @@ dependencies = [
 
 [[package]]
 name = "mdbook-trunk"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "anyhow",
  "cargo",
