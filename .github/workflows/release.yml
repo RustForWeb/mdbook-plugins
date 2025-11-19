@@ -143,9 +143,10 @@ jobs:
               if: ${{ matrix.target == 'aarch64-unknown-linux-musl' }}
               run: |
                   sudo apt update -y
-                  sudo apt install -y gcc-aarch64-linux-gnu
-                  echo CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=rust-lld >> $GITHUB_ENV
-                  echo CC=aarch64-linux-gnu-gcc >> $GITHUB_ENV
+                  sudo apt install -y clang llvm musl-tools
+                  echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_RUSTFLAGS=-Clink-self-contained=yes -Clinker=rust-lld" >> $GITHUB_ENV
+                  echo CC_aarch64_unknown_linux_musl=clang >> $GITHUB_ENV
+                  echo AR_aarch64_unknown_linux_musl=llvm-ar >> $GITHUB_ENV
 
             - name: Build
               run: cargo build --bins --locked --release --target ${{ matrix.target }}
