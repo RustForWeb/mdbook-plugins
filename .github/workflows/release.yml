@@ -72,7 +72,7 @@ jobs:
                   GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
             - name: Release
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               with:
                   generate_release_notes: true
                   make_latest: true
@@ -163,14 +163,14 @@ jobs:
 
             - name: Upload release asset (tar.gz)
               if: ${{ !contains(matrix.target, '-windows-') }}
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               with:
                   tag_name: ${{ needs.release.outputs.version }}
                   files: target/${{ matrix.package }}-${{ needs.release.outputs.version }}-${{ matrix.target }}.tar.gz
 
             - name: Upload release asset (zip)
               if: ${{ contains(matrix.target, '-windows-') }}
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               with:
                   tag_name: ${{ needs.release.outputs.version }}
                   files: target/${{ matrix.package }}-${{ needs.release.outputs.version }}-${{ matrix.target }}.zip
