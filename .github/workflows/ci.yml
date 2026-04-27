@@ -1,0 +1,17 @@
+name: CI
+
+on:
+    pull_request: {}
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: read
+
+jobs:
+    rust:
+        name: Rust
+        uses: RustForWeb/.github/.github/workflows/rust.yml@373c25f8fd29e10c40f1343f13312f8be3514af0
+        with:
+            target: wasm32-unknown-unknown

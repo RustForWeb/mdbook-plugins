@@ -1,0 +1,14 @@
+name: Publish
+
+on:
+    release:
+        types: [published]
+
+permissions:
+    contents: read
+    id-token: write
+
+jobs:
+    publish:
+        name: Publish
+        uses: RustForWeb/.github/.github/workflows/publish.yml@373c25f8fd29e10c40f1343f13312f8be3514af0
