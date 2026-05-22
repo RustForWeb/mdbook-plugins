@@ -10,8 +10,12 @@ permissions:
     contents: read
 
 jobs:
+    commits:
+        name: Commits
+        uses: RustForWeb/.github/.github/workflows/commits.yml@b12847e2aa8dede8174ffff5f1ecf932699aeac8 # v1.0.0
+
     rust:
         name: Rust
-        uses: RustForWeb/.github/.github/workflows/rust.yml@373c25f8fd29e10c40f1343f13312f8be3514af0
+        uses: RustForWeb/.github/.github/workflows/rust.yml@b12847e2aa8dede8174ffff5f1ecf932699aeac8 # v1.0.0
         with:
             target: wasm32-unknown-unknown

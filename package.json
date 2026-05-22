@@ -7,9 +7,11 @@
     "private": true,
     "scripts": {},
     "devDependencies": {
-        "prettier": "^3.2.5"
+        "@commitlint/cli": "^21.0.0",
+        "@commitlint/config-conventional": "^21.0.0",
+        "prettier": "^3.7.4"
     },
     "engines": {
-        "node": ">=18"
+        "node": ">=24"
     }
 }

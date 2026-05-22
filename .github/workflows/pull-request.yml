@@ -1,0 +1,13 @@
+name: Pull Request
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened, edited]
+
+permissions:
+    contents: read
+
+jobs:
+    pull-request:
+        name: Pull Request
+        uses: RustForWeb/.github/.github/workflows/pull-request.yml@b12847e2aa8dede8174ffff5f1ecf932699aeac8 # v1.0.0
