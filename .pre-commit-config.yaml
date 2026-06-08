@@ -22,7 +22,7 @@ repos:
             args: ['--all-targets', '--all-features', '--', '-D', 'warnings']
 
     - repo: https://github.com/EmbarkStudios/cargo-deny
-      rev: 0.19.7
+      rev: 0.19.8
       hooks:
           - id: cargo-deny
 
