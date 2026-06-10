@@ -4,6 +4,7 @@ all-features = true
 [advisories]
 ignore = [
     { id = "RUSTSEC-2024-0436", reason = "No maintained version available for `paste`." },
+    { id = "RUSTSEC-2026-0173", reason = "No maintained version available for `proc-macro-error2`." },
 ]
 
 [bans]
