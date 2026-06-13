@@ -78,24 +78,24 @@ jobs:
 
             - name: Archive (tar.gz)
               if: ${{ !contains(matrix.target, '-windows-') }}
-              run: tar czf ../../${{ matrix.package }}-${{ needs.release.outputs.version }}-${{ matrix.target }}.tar.gz ${{ matrix.package }}
+              run: tar czf ../../${{ matrix.package }}-${{ github.event.release.tag_name }}-${{ matrix.target }}.tar.gz ${{ matrix.package }}
               working-directory: target/${{ matrix.target }}/release
 
             - name: Archive (zip)
               if: ${{ contains(matrix.target, '-windows-') }}
-              run: 7z a ../../${{ matrix.package }}-${{ needs.release.outputs.version }}-${{ matrix.target }}.zip ${{ matrix.package }}.exe
+              run: 7z a ../../${{ matrix.package }}-${{ github.event.release.tag_name }}-${{ matrix.target }}.zip ${{ matrix.package }}.exe
               working-directory: target/${{ matrix.target }}/release
 
             - name: Upload release asset (tar.gz)
               if: ${{ !contains(matrix.target, '-windows-') }}
               uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
               with:
-                  tag_name: ${{ needs.release.outputs.version }}
-                  files: target/${{ matrix.package }}-${{ needs.release.outputs.version }}-${{ matrix.target }}.tar.gz
+                  tag_name: ${{ github.event.release.tag_name }}
+                  files: target/${{ matrix.package }}-${{ github.event.release.tag_name }}-${{ matrix.target }}.tar.gz
 
             - name: Upload release asset (zip)
               if: ${{ contains(matrix.target, '-windows-') }}
               uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
               with:
-                  tag_name: ${{ needs.release.outputs.version }}
-                  files: target/${{ matrix.package }}-${{ needs.release.outputs.version }}-${{ matrix.target }}.zip
+                  tag_name: ${{ github.event.release.tag_name }}
+                  files: target/${{ matrix.package }}-${{ github.event.release.tag_name }}-${{ matrix.target }}.zip
