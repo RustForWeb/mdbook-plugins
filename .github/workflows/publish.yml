@@ -12,7 +12,7 @@ permissions:
 jobs:
     publish:
         name: Publish
-        uses: RustForWeb/.github/.github/workflows/publish.yml@b12847e2aa8dede8174ffff5f1ecf932699aeac8 # v1.0.0
+        uses: RustForWeb/.github/.github/workflows/publish.yml@dc2442c27ef9f920a1a889ec94e615b419b491b2 # v1.0.1
         with:
             enable-rust: true
             enable-typescript: false
