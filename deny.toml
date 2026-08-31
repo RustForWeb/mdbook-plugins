@@ -5,9 +5,12 @@ all-features = true
 ignore = [
     { id = "RUSTSEC-2024-0436", reason = "No maintained version available for `paste`." },
     { id = "RUSTSEC-2026-0173", reason = "No maintained version available for `proc-macro-error2`." },
+    { id = "RUSTSEC-2026-0183", reason = "No safe version available for `git2` due to other dependencies." },
+    { id = "RUSTSEC-2026-0184", reason = "No safe version available for `git2` due to other dependencies." },
     { id = "RUSTSEC-2026-0247", reason = "No maintained version available for `bitmaps`." },
     { id = "RUSTSEC-2026-0250", reason = "No maintained version available for `im-rc`." },
     { id = "RUSTSEC-2026-0251", reason = "No maintained version available for `sized-chunks`." },
+    { id = "RUSTSEC-2026-0255", reason = "No safe version available for `sized-chunks` due to other dependencies." },
 ]
 yanked = "deny"
 
@@ -19,7 +22,6 @@ wildcards = "deny"
 [licenses]
 allow = [
     "Apache-2.0",
-    "BSD-2-Clause",
     "BSD-3-Clause",
     "BSL-1.0",
     "CC-BY-4.0",
