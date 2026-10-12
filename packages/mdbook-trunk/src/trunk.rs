@@ -1,7 +1,7 @@
 use std::{fs, path::Path, process::Command, str};
 
 use anyhow::{Result, bail};
-use cargo::core::Workspace;
+use cargo::workspace::Workspace;
 use htmlentity::entity::{CharacterSet, EncodeType, ICodedDataTrait, encode};
 use log::{error, info};
 

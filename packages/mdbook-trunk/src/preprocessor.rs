@@ -1,7 +1,9 @@
 use std::{env, str};
 
 use anyhow::Result;
-use cargo::{GlobalContext, core::Workspace, util::important_paths::find_root_manifest_for_wd};
+use cargo::{
+    GlobalContext, util::important_paths::find_root_manifest_for_wd, workspace::Workspace,
+};
 use mdbook_preprocessor::{
     Preprocessor, PreprocessorContext,
     book::{Book, BookItem},
