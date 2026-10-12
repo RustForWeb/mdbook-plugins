@@ -1,7 +1,7 @@
 use std::{collections::HashMap, path::PathBuf};
 
 use anyhow::{Result, anyhow};
-use cargo::{core::Workspace, ops::Packages};
+use cargo::{ops::Packages, workspace::Workspace};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]

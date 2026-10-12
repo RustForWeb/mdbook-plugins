@@ -1,7 +1,9 @@
 use std::{collections::HashSet, env};
 
 use anyhow::Result;
-use cargo::{GlobalContext, core::Workspace, util::important_paths::find_root_manifest_for_wd};
+use cargo::{
+    GlobalContext, util::important_paths::find_root_manifest_for_wd, workspace::Workspace,
+};
 use mdbook_renderer::{RenderContext, Renderer, book::BookItem};
 
 use crate::{config::BuildConfig, parser::iframe::parse_iframes, trunk::build};
