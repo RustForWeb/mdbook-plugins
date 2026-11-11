@@ -8,6 +8,7 @@ ignore = [
     { id = "RUSTSEC-2026-0250", reason = "No maintained version available for `im-rc`." },
     { id = "RUSTSEC-2026-0251", reason = "No maintained version available for `sized-chunks`." },
     { id = "RUSTSEC-2026-0387", reason = "No safe upgrade available for `crypto-bigint` due to other dependencies." },
+    { id = "RUSTSEC-2026-0459", reason = "No safe upgrade available for `libsqlite3-sys` due to other dependencies." },
 ]
 yanked = "deny"
 
@@ -19,6 +20,7 @@ wildcards = "deny"
 [licenses]
 allow = [
     "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
     "BSD-3-Clause",
     "BSL-1.0",
     "CC-BY-4.0",
