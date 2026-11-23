@@ -13,4 +13,6 @@ version.workspace = true
 anyhow.workspace = true
 log.workspace = true
 pulldown-cmark.workspace = true
+
+[dev-dependencies]
 test-log.workspace = true
