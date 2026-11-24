@@ -18,4 +18,4 @@ concurrency:
 jobs:
     book:
         name: Book
-        uses: RustForWeb/.github/.github/workflows/book.yml@b5ef6f755ec1f34502bf3e355f984f1e2815a33c # v1.0.5
+        uses: RustForWeb/.github/.github/workflows/book.yml@1eb0d276693a31a20809731314b00c52c9bcba32 # v1.0.6
